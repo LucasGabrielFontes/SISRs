@@ -1,6 +1,7 @@
 #include "../include/Data.h"
 #include <math.h>
 
+// Construtor
 Data::Data(int qt_params, char *instance):
 x(NULL),
 y(NULL),
@@ -20,10 +21,12 @@ matrix_dist(NULL) {
     depot = -1;
 }
 
+// Destrutor
 Data::~Data(){
 
 	delete [] x;
 	delete [] y;
+    delete [] demand;
 
 	for ( int i = 0; i < dimension; i++){
 		delete [] matrix_dist[i];
@@ -31,7 +34,8 @@ Data::~Data(){
 	delete [] matrix_dist;
 }
 
-void Data::read_instance(){
+// Le a instancia informada
+void Data::read_instance(){ 
 
     ifstream input_CVRP(instance_name, ios::in);
 
@@ -112,6 +116,7 @@ void Data::read_instance(){
         exit(1);
     }
 
+    // Cria o vetor de coordenadas x, o vetor de coordenadas y, o vetor de demandas demand e a matriz de distancias matrix_dist com base na dimensao do problema
     x = new double [dimension];
     y = new double [dimension];
     demand = new double [dimension];
@@ -126,7 +131,7 @@ void Data::read_instance(){
     }
 
     int node;
-    for (int i = 0; i < dimension; i++) {
+    for (int i = 0; i < dimension; i++) { // Resgata as coordenadas de cada no
         input_CVRP >> node >> x[i] >> y[i];
         if (x[i] < 0 || y[i] < 0) {
             cout << "Coordenada negativa encontrada no no " << i+1 << endl;
@@ -134,7 +139,7 @@ void Data::read_instance(){
         }
     }
 
-    for (int i = 0; i < dimension; i++) {
+    for (int i = 0; i < dimension; i++) { // Calcula a distancia entre cada ponto e a armazena na matrix_dist
         for (int j = 0; j < dimension; j++) {
             if (i == j) {
                 matrix_dist[i][j] = INFINITE;
@@ -149,7 +154,7 @@ void Data::read_instance(){
         input_CVRP >> file;
     }
 
-    for (int i = 0; i < dimension; i++) {
+    for (int i = 0; i < dimension; i++) { // Resgata as demandas
         input_CVRP >> node >> demand[i];
         if (demand[i] < 0) {
             cout << "Demanda negativa encontrada no no " << i+1 << endl;
@@ -161,16 +166,21 @@ void Data::read_instance(){
         input_CVRP >> file;
     }
 
-    input_CVRP >> depot;
+    input_CVRP >> depot; // Resgata o no de deposito (sempre 1 por padrao)
 
     if (depot < 1 || depot > dimension) {
         cout << "Deposito invalido!" << endl;
         exit(1);
     }
 
+    if (depot != 1) {
+        cout << "No de deposito (" << depot << ") fora do padrao: 1" << endl;
+        exit(1);
+    }
+
     input_CVRP >> file;
 
-    if (file != "-1") {
+    if (file != "-1") { // Verifica se ha apenas um no de deposito. Se nao houver: erro
         cout << "DEPOT_SECTION invalida!" << endl;
         exit(1);
     }
@@ -178,10 +188,12 @@ void Data::read_instance(){
     input_CVRP.close();
 }
 
+// Funcao para calcular a distancia euclidiana entre dois pontos
 double Data::calc_dist (double *x, double *y, int i, int j){
 	return sqrt(pow(x[i] - x[j], 2) + pow (y[i] - y[j], 2));
 }
 
+// Funcao para printar toda a matriz de distancias
 void Data::print_matrix_dist() {
     for (int i = 0; i < get_dimension(); i++) {
         for (int j = 0; j < get_dimension(); j++) {
