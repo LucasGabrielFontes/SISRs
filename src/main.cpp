@@ -11,6 +11,16 @@ int main(int argc, char** argv) {
     cout << "Dimensao do problema: " << data.dimension << endl;
     cout << "Edge weight type: " << data.edge_weight_type << endl;
     cout << "Capacidade: " << data.capacity << endl;
+    cout << "Coordenadas: " << endl;
+    for (int i = 0; i < data.dimension; i++) {
+        cout << i+1 << ": (" << data.x[i] << ", " << data.y[i] << ")" << endl;
+    }
+    cout << "Demandas: " << endl;
+    for (int i = 0; i < data.dimension; i++) {
+        cout << i+1 << ": " << data.demand[i] << endl;
+    }
+
+    data.print_matrix_dist();
 
     return 0;
 }
