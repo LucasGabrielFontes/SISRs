@@ -24,10 +24,10 @@ public:
     inline string get_problem_type() {return problem_type;};
     inline string get_edge_weight_type() {return edge_weight_type;};
 
-    inline double get_distance(int i, int j) {return matrix_dist[i-1][j-1];};
+    inline double get_distance(int i, int j) const {return matrix_dist[i-1][j-1];};
     inline double get_x(int i) {return x[i-1];};
     inline double get_y(int i) {return y[i-1];};
-    inline double get_demand(int i) {return demand[i-1];};
+    inline double get_demand(int i) const {return demand[i-1];};
 
 private:
     int dimension;            // Dimensao da instancia
@@ -40,7 +40,7 @@ private:
 
     double **matrix_dist;     // Matriz que armazena a distancia de um no a outro
     double *x, *y;            // Vetores que armazenam as coordenadas no eixo x e y de cada ponto no, respectivamente
-    double *demand;           // Vetor que armazena a demanda de cada no
+    int *demand;              // Vetor que armazena a demanda de cada no
 
     static double calc_dist (double *, double *, int , int ); // Calcula a distancia entre dois nos
 };

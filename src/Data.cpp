@@ -119,7 +119,7 @@ void Data::read_instance(){
     // Cria o vetor de coordenadas x, o vetor de coordenadas y, o vetor de demandas demand e a matriz de distancias matrix_dist com base na dimensao do problema
     x = new double [dimension];
     y = new double [dimension];
-    demand = new double [dimension];
+    demand = new int [dimension];
     matrix_dist = new double *[dimension];
 
     for (int i = 0; i < dimension; i++) {
@@ -133,10 +133,6 @@ void Data::read_instance(){
     int node;
     for (int i = 0; i < dimension; i++) { // Resgata as coordenadas de cada no
         input_CVRP >> node >> x[i] >> y[i];
-        if (x[i] < 0 || y[i] < 0) {
-            cout << "Coordenada negativa encontrada no no " << i+1 << endl;
-            exit(1);
-        }
     }
 
     for (int i = 0; i < dimension; i++) { // Calcula a distancia entre cada ponto e a armazena na matrix_dist
