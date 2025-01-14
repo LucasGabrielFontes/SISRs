@@ -14,13 +14,13 @@
 
 #define ALPHA 0.01
 
-void LocalSearch(Solution& solution, const Data& data) { // struct
+void LocalSearch(Solution& solution, Data& data) { // struct
 
     Solution best_sol = solution;
     double T = T0;
     for (int i = 0; i < F; i++) {
 
-        Solution solution_star; //= ruin(solution);
+        Solution solution_star = ruin(solution, data);
         solution_star; //= recreate(solution_star);
         if (solution_star.cost < solution.cost - T*log(Random::getReal(0+EP, 1-EP))) {
             solution = solution_star;
@@ -75,9 +75,6 @@ Solution ruin(Solution sol, Data& data) {
 }
 
 void remove_split_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
-
-    int size_block1 = Random::getInt(0, size_string);
-    int size_block2 = size_string - size_block1 - 1;
 
     int m = 1;
 

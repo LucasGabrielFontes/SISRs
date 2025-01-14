@@ -3,7 +3,7 @@
 
 #include "Solution.h"
 
-void LocalSearch(Solution& , const Data& );
+void LocalSearch(Solution& , Data& );
 Solution ruin(Solution , Data& );
 void remove_string(Solution & , Data& , int , int , int );
 void remove_split_string(Solution & , Data& , int , int , int );
