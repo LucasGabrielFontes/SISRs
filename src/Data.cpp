@@ -1,5 +1,6 @@
 #include "../include/Data.h"
 #include <math.h>
+#include <algorithm>
 
 // Construtor
 Data::Data(int qt_params, char *instance):
@@ -182,6 +183,25 @@ void Data::read_instance(){
     }
 
     input_CVRP.close();
+
+    adjList.resize(dimension); // Inicia a preencher a lista de adjacencias
+
+    for (int i = 0; i < dimension; i++) {
+        adjList[i].resize(dimension); // Cada linha pode tem dimension clientes
+    }
+
+    for (int i = 0; i < dimension; i++) {
+        for (int j = 0; j < dimension; j++) {
+            adjList[i][j] = j+1;
+        }
+    }
+
+    for (int i = 0; i < dimension; i++) {
+        sort(adjList[i].begin(), adjList[i].end(), [this, i] (int a, int b) {
+            return (get_distance(a, i+1) < get_distance(b, i+1));
+        });
+    }
+    
 }
 
 // Funcao para calcular a distancia euclidiana entre dois pontos

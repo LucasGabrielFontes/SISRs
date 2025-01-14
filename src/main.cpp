@@ -3,6 +3,7 @@
 #include <time.h>
 
 #include "../include/Solution.h"
+#include "../include/LocalSearch.h"
 
 int main(int argc, char** argv) {
 
@@ -14,5 +15,7 @@ int main(int argc, char** argv) {
 
     Solution sol = Construction(data);
     
+
+
     return 0;
 }

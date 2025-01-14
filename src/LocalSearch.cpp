@@ -12,6 +12,8 @@
 #define C_ 10
 #define L_MAX 10
 
+#define ALPHA 0.01
+
 void LocalSearch(Solution& solution, const Data& data) { // struct
 
     Solution best_sol = solution;
@@ -41,25 +43,18 @@ Solution ruin(Solution sol, Data& data) {
 
     int ks = floor(Random::getReal(1+EP, ksMax + 1 - EP)); // Quantidade de strings que serao removidas
 
-    vector<int> costumers_not_abs = get_customers_not_abs(data, sol);
-    int ind = Random::getInt(0, costumers_not_abs.size()-1);
-    int csSeed = costumers_not_abs[ind]; // Cliente aleatorio
-
-    vector<int> adjC = costumers_not_abs; // Lista de adjacencia que sera ordenada com base na distancia ate o cliente aleatorio
-    sort(adjC.begin(), adjC.end(), [data, csSeed](int a, int b) {
-        return data.get_distance(a, csSeed) < data.get_distance(b, csSeed);
-    });
+    int csSeed = Random::getInt(2, data.get_dimension()); // Cliente aleatorio
 
     vector<int> R = {}; // Conjunto de tour arruinados
 
-    for (int i = 0; i < adjC.size() && R.size() < ks; i++) {
+    for (int i = 1; i <= data.get_dimension() && R.size() < ks; i++) {
 
-        if (find(sol.abs_costumers.begin(), sol.abs_costumers.end(), adjC[i]) == sol.abs_costumers.end()
-        && find(R.begin(), R.end(), sol.costumer_to_vehicle[adjC[i]]) == R.end()) {
+        if (find(sol.abs_costumers.begin(), sol.abs_costumers.end(), data.get_adj(csSeed, i)) == sol.abs_costumers.end()
+        && find(R.begin(), R.end(), sol.costumer_to_vehicle[data.get_adj(csSeed, i)]) == R.end()) {
 
-            int ct_star = adjC[i];
+            int ct_star = data.get_adj(csSeed, i);
 
-            double ltMax = min(static_cast<double>(sol.vehicles[sol.costumer_to_vehicle[adjC[i]] - 1].route.size()), lsMax); // Cardinalidade maxima da string a ser removida no tour/veiculo t
+            double ltMax = min(static_cast<double>(sol.vehicles[sol.costumer_to_vehicle[data.get_adj(csSeed, i)] - 1].route.size()), lsMax); // Cardinalidade maxima da string a ser removida no tour/veiculo t
 
             int lt = floor(Random::getReal(1 + EP, ltMax + 1 - EP)); // Cardinalidade da string a ser removida no tuor t
 
@@ -67,28 +62,87 @@ Solution ruin(Solution sol, Data& data) {
 
             // Remove as strings. O conjunto de absent costumers ja eh atualizado nas funcoes
             if (rd == 0) {
-                remove_string(sol, data, sol.costumer_to_vehicle[adjC[i]], lt, ct_star);
+                remove_string(sol, data, sol.costumer_to_vehicle[data.get_adj(csSeed, i)], lt, ct_star);
             } else {
-                remove_split_string(sol, data, sol.costumer_to_vehicle[adjC[i]], lt, ct_star);
+                remove_split_string(sol, data, sol.costumer_to_vehicle[data.get_adj(csSeed, i)], lt, ct_star);
             }
 
-            R.push_back(sol.costumer_to_vehicle[adjC[i]]);
+            R.push_back(sol.costumer_to_vehicle[data.get_adj(csSeed, i)]);
         }
     }
 
     return sol;
 }
 
-vector<int> get_customers_not_abs(Data& data, Solution& sol) {
+void remove_split_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
 
-    std::vector<int> all_customers = {};
+    int size_block1 = Random::getInt(0, size_string);
+    int size_block2 = size_string - size_block1 - 1;
 
-    for (int i = 2; i <= data.get_dimension(); i++)
-        all_customers.push_back(i);
+    int m = 1;
 
-    // Remove os clientes ausentes
-    for (int customer: sol.abs_costumers)
-        all_customers.erase(std::remove(all_customers.begin(), all_customers.end(), customer), all_customers.end());
+    int rd = Random::getInt(0+EP, 1-EP);
 
-    return all_customers;
+    while (!(rd < ALPHA || m == sol.vehicles[tour].route.size() - size_string)) {
+        m += 1;
+        rd = Random::getInt(0+EP, 1-EP);
+    }
+
+    size_string += m;
+
+    int size_block1 = Random::getInt(0, size_string);
+    int size_block2 = size_string - size_block1 - 1;
+
+    auto it = find(sol.vehicles[tour].route.begin(), sol.vehicles[tour].route.end(), costumer_remove);
+    int ind = (it != sol.vehicles[tour].route.end()) ? std::distance(sol.vehicles[tour].route.begin(), it) : -1;
+
+    if (ind == -1) {
+        cout << "Erro na funcao remove_string" << endl;
+        exit(1);
+    }
+
+    if (ind - size_block1 < 0 || ind + size_block2 >= sol.vehicles[tour].route.size()) {
+        cout << "Bloco fora dos limites da rota na funcao remove_string." << endl;
+        exit(1);
+    }
+
+    int ind_main = Random::getInt(ind, ind + size_string - 1 - m); // Indice que indica o inicio da string que permanecera na rota
+
+    for (int i = ind - size_block1; i < ind_main; i++) {
+        sol.abs_costumers.push_back(sol.vehicles[tour].route[i]);
+    }
+
+    for (int i = ind_main + m; i <= ind + size_block2; i++) {
+        sol.abs_costumers.push_back(sol.vehicles[tour].route[i]);
+    }
+
+    sol.vehicles[tour].route.erase(sol.vehicles[tour].route.begin() + ind - size_block1, sol.vehicles[tour].route.begin() + ind_main + 1); 
+
+    sol.vehicles[tour].route.erase(sol.vehicles[tour].route.begin() + ind_main + m - 1, sol.vehicles[tour].route.begin() + ind + size_block2 + 1);     
+
+}
+
+void remove_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
+
+    int size_block1 = Random::getInt(0, size_string);
+    int size_block2 = size_string - size_block1 - 1;
+
+    auto it = find(sol.vehicles[tour].route.begin(), sol.vehicles[tour].route.end(), costumer_remove);
+    int ind = (it != sol.vehicles[tour].route.end()) ? std::distance(sol.vehicles[tour].route.begin(), it) : -1;
+
+    if (ind == -1) {
+        cout << "Erro na funcao remove_string" << endl;
+        exit(1);
+    }
+
+    if (ind - size_block1 < 0 || ind + size_block2 >= sol.vehicles[tour].route.size()) {
+        cout << "Bloco fora dos limites da rota na funcao remove_string." << endl;
+        exit(1);
+    }
+
+    for (int i = ind - size_block1; i <= ind + size_block2; i++) {
+        sol.abs_costumers.push_back(sol.vehicles[tour].route[i]);
+    }
+
+    sol.vehicles[tour].route.erase(sol.vehicles[tour].route.begin() + ind - size_block1, sol.vehicles[tour].route.begin() + size_block2 + 1);    
 }

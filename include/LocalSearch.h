@@ -5,6 +5,7 @@
 
 void LocalSearch(Solution& , const Data& );
 Solution ruin(Solution , Data& );
-vector<int> get_customers_not_abs(Data& , Solution& );
+void remove_string(Solution & , Data& , int , int , int );
+void remove_split_string(Solution & , Data& , int , int , int );
 
 #endif

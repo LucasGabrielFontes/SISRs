@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 
 #define INFINITE 0
 
@@ -29,18 +30,21 @@ public:
     inline double get_y(int i) {return y[i-1];};
     inline double get_demand(int i) const {return demand[i-1];};
 
+    inline int get_adj(int i, int j) const {return adjList[i-1][j-1];};
+
 private:
-    int dimension;            // Dimensao da instancia
-    int capacity;             // Capacidade homogenea dos veiculos
-    int depot;                // No de deposito (1)
+    int dimension;               // Dimensao da instancia
+    int capacity;                // Capacidade homogenea dos veiculos
+    int depot;                   // No de deposito (1)
 
-    string instance_name;     // Nome da instancia
-    string problem_type;      // Tipo do problema (CVRP)
-    string edge_weight_type;  // EUC_2D
+    string instance_name;        // Nome da instancia
+    string problem_type;         // Tipo do problema (CVRP)
+    string edge_weight_type;     // EUC_2D
 
-    double **matrix_dist;     // Matriz que armazena a distancia de um no a outro
-    double *x, *y;            // Vetores que armazenam as coordenadas no eixo x e y de cada ponto no, respectivamente
-    int *demand;              // Vetor que armazena a demanda de cada no
+    double **matrix_dist;        // Matriz que armazena a distancia de um no a outro
+    vector<vector<int>> adjList; // Matriz que contem todos os clientes em ordem crescente com relacao a algum no i
+    double *x, *y;               // Vetores que armazenam as coordenadas no eixo x e y de cada ponto no, respectivamente
+    int *demand;                 // Vetor que armazena a demanda de cada no
 
     static double calc_dist (double *, double *, int , int ); // Calcula a distancia entre dois nos
 };
