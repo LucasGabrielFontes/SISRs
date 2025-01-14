@@ -16,7 +16,7 @@ public:
     void read_instance();
     void print_matrix_dist();
 
-    inline int get_dimension() {return dimension;};
+    inline int get_dimension() const {return dimension;};
     inline int get_capacity() {return capacity;};
     inline int get_depot() {return depot;};
 

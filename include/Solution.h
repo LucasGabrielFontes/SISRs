@@ -11,5 +11,7 @@ struct Solution {
 };
 
 double calc_cost_solution(const struct Solution&, const Data &);
+Solution Solution_Sisrs(Data& );
+Solution Construction(Data& );
 
 #endif

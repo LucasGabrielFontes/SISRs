@@ -3,6 +3,8 @@
 
 #include "Solution.h"
 
-void LocalSearch(Solution& , const Data& , const double, const double, const int f );
+void LocalSearch(Solution& , const Data& );
+Solution ruin(Solution , Data& );
+vector<int> get_customers_not_abs(Data& , Solution& );
 
 #endif

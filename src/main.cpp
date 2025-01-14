@@ -2,6 +2,8 @@
 #include "../include/random.h"
 #include <time.h>
 
+#include "../include/Solution.h"
+
 int main(int argc, char** argv) {
 
     unsigned int seed = time(NULL);
@@ -10,7 +12,7 @@ int main(int argc, char** argv) {
     auto data = Data(argc, argv[1]);
     data.read_instance();
 
-    int L_max = 10;
-
+    Solution sol = Construction(data);
+    
     return 0;
 }
