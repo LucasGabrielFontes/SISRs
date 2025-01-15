@@ -7,15 +7,13 @@
 
 int main(int argc, char** argv) {
 
-    unsigned int seed = time(NULL);
-    Random::randomize(seed);
+    // unsigned int seed = time(NULL);
+    // Random::randomize(seed);
 
-    auto data = Data(argc, argv[1]);
-    data.read_instance();
+    // auto data = Data(argc, argv[1]);
+    // data.read_instance();
 
-    Solution sol = Construction(data);
-    
-
+    // Solution sol = Construction(data);
 
     return 0;
 }

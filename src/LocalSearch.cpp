@@ -87,8 +87,8 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
 
     size_string += m;
 
-    int size_block1 = Random::getInt(0, size_string);
-    int size_block2 = size_string - size_block1 - 1;
+    int size_block1 = Random::getInt(1, size_string - 1); // Tamanho do bloco total que vem antes do cliente central
+    int size_block2 = size_string - size_block1 - 1; // Tamanho do bloco total que vem depois do cliente central
 
     auto it = find(sol.vehicles[tour].route.begin(), sol.vehicles[tour].route.end(), costumer_remove);
     int ind = (it != sol.vehicles[tour].route.end()) ? std::distance(sol.vehicles[tour].route.begin(), it) : -1;
@@ -98,34 +98,72 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
         exit(1);
     }
 
-    if (ind - size_block1 < 0 || ind + size_block2 >= sol.vehicles[tour].route.size()) {
-        cout << "Bloco fora dos limites da rota na funcao remove_string." << endl;
-        exit(1);
+    if (ind - size_block1 < 0) {
+        size_block1 = ind;  // Ajusta o bloco anterior para o início da rota
     }
 
-    int ind_main = Random::getInt(ind, ind + size_string - 1 - m); // Indice que indica o inicio da string que permanecera na rota
+    if (ind + size_block2 >= sol.vehicles[tour].route.size()) {
+        size_block2 = sol.vehicles[tour].route.size() - 1 - ind;  // Ajusta o bloco posterior para o final da rota
+    }
 
+    int ind_main = Random::getInt(ind - size_block1 + 1, ind + size_block2 - 1); // Indice que indica o inicio da string que permanecera na rota (tamanho m definido acima)
+    ind_main = max(ind - size_block1 + 1, min(ind_main, ind + size_block2 - 1));  // Garante que ind_main está no intervalo válido
+
+    // Atualiza a lista de clientes ausentes com base na primeira parte da split string
+    // Atualiza a lista costumer_to_vehicle com base na primeira parte da split string
     for (int i = ind - size_block1; i < ind_main; i++) {
-        sol.abs_costumers.push_back(sol.vehicles[tour].route[i]);
+        int costumer = sol.vehicles[tour].route[i];
+        sol.abs_costumers.push_back(costumer);
+        sol.costumer_to_vehicle[costumer-1] = -1;
     }
 
+    int i1 = ind - size_block1 > 0 ? ind - size_block1 - 1 : 0;
+    int f1 = ind_main;
+
+    // Atualiza o custo da solucao com base na primeira parte da split string
+    // Atualiza o custo individual de cada veiculo com base na primeira parte da split string
+    // Atualiza a demanda utilizada de cada veiculo com base na primeira parte da split string
+    for (; i1 < f1; i1++) {
+        int costumer = sol.vehicles[tour].route[i1];
+        sol.cost -= data.get_distance(costumer, costumer+1);
+        sol.vehicles[tour].cost -= data.get_distance(costumer, costumer+1);
+        sol.vehicles[tour].capacity_used -= data.get_demand(costumer);
+    }
+
+    // Atualiza a lista de clientes ausentes com base na segunda parte da split string
+    // Atualiza a lista costumer_to_vehicle com base na segunda parte da split string
     for (int i = ind_main + m; i <= ind + size_block2; i++) {
-        sol.abs_costumers.push_back(sol.vehicles[tour].route[i]);
+        int costumer = sol.vehicles[tour].route[i];
+        sol.abs_costumers.push_back(costumer);
+        sol.costumer_to_vehicle[costumer-1] = -1;
     }
 
-    sol.vehicles[tour].route.erase(sol.vehicles[tour].route.begin() + ind - size_block1, sol.vehicles[tour].route.begin() + ind_main + 1); 
+    int i2 = ind_main;
+    int f2 = ind_main + size_block2 < sol.vehicles[tour].route.size() - 1 ? ind_main + size_block2 + 1 : ind_main + size_block2;
 
-    sol.vehicles[tour].route.erase(sol.vehicles[tour].route.begin() + ind_main + m - 1, sol.vehicles[tour].route.begin() + ind + size_block2 + 1);     
+    // Atualiza o custo da solucao com base na segunda parte da split string
+    // Atualiza o custo individual de cada veiculo com base na segunda parte da split string
+    // Atualiza a demanda utilizada de cada veiculo com base na segunda parte da split string
+    for (; i2 < f2; i2++) {
+        int costumer = sol.vehicles[tour].route[i2];
+        sol.cost -= data.get_distance(costumer, costumer+1);
+        sol.vehicles[tour].cost -= data.get_distance(costumer, costumer+1);
+        sol.vehicles[tour].capacity_used -= data.get_demand(costumer);
+    }
+    sol.vehicles[i2].capacity_used -= data.get_demand(sol.vehicles[tour].route[i2]);
 
+    sol.vehicles[tour].route.erase(sol.vehicles[tour].route.begin() + ind_main + 1, sol.vehicles[tour].route.begin() + ind + size_block2 + 1);
+
+    sol.vehicles[tour].route.erase(sol.vehicles[tour].route.begin() + ind - size_block1, sol.vehicles[tour].route.begin() + ind_main); 
 }
 
 void remove_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
 
-    int size_block1 = Random::getInt(0, size_string);
-    int size_block2 = size_string - size_block1 - 1;
+    int size_block1 = Random::getInt(0, size_string - 1); // Tamanho do bloco que vem antes do costumer_remove
+    int size_block2 = size_string - size_block1 - 1; // Tamanho do bloco que vem depois do costumer_remove
 
-    auto it = find(sol.vehicles[tour].route.begin(), sol.vehicles[tour].route.end(), costumer_remove);
-    int ind = (it != sol.vehicles[tour].route.end()) ? std::distance(sol.vehicles[tour].route.begin(), it) : -1;
+    auto it = find(sol.vehicles[tour].route.begin(), sol.vehicles[tour].route.end(), costumer_remove); // Iterador para o local onde o costumer_remove esta
+    int ind = (it != sol.vehicles[tour].route.end()) ? std::distance(sol.vehicles[tour].route.begin(), it) : -1; // Indice do costumer_remove em sua rota
 
     if (ind == -1) {
         cout << "Erro na funcao remove_string" << endl;
@@ -137,9 +175,28 @@ void remove_string(Solution &sol, Data& data, int tour, int size_string, int cos
         exit(1);
     }
 
+    // Atualiza a lista de veiculos ausentes
+    // Atualiza a lista costumer_to_vehicle
     for (int i = ind - size_block1; i <= ind + size_block2; i++) {
-        sol.abs_costumers.push_back(sol.vehicles[tour].route[i]);
+        int costumer = sol.vehicles[tour].route[i];
+        sol.abs_costumers.push_back(costumer);
+        sol.costumer_to_vehicle[costumer-1] = -1;
     }
 
-    sol.vehicles[tour].route.erase(sol.vehicles[tour].route.begin() + ind - size_block1, sol.vehicles[tour].route.begin() + size_block2 + 1);    
+    int i = ind - size_block1 > 0 ? ind - size_block1 - 1 : 0;
+    int f = ind + size_block2 < sol.vehicles[tour].route.size() - 1 ? ind + size_block2 + 1 : ind + size_block2;
+
+    // Atualiza o custo da solucao
+    // Atualiza o custo individual de cada veiculo
+    // Atualiza a demanda utilizada de cada veiculo
+    for (; i < f; i++) {
+        int costumer = sol.vehicles[tour].route[i];
+        sol.cost -= data.get_distance(costumer, costumer+1);
+        sol.vehicles[tour].cost -= data.get_distance(costumer, costumer+1);
+        sol.vehicles[tour].capacity_used -= data.get_demand(costumer);
+    }
+    sol.cost += data.get_distance(sol.vehicles[tour].route[i],sol.vehicles[tour].route[f]);
+    sol.vehicles[i].capacity_used -= data.get_demand(sol.vehicles[tour].route[i]);
+
+    sol.vehicles[tour].route.erase(sol.vehicles[tour].route.begin() + ind - size_block1, sol.vehicles[tour].route.begin() + ind + size_block2 + 1);
 }
