@@ -4,6 +4,7 @@
 
 #include "../include/Solution.h"
 #include "../include/LocalSearch.h"
+#include "../include/Ruin.h"
 
 int main(int argc, char** argv) {
 
@@ -15,14 +16,28 @@ int main(int argc, char** argv) {
 
     Solution sol = Construction(data);
 
-    cout << "Veiculos e suas rotas: " << endl;
+    sol = ruin(sol, data);
 
+    // cout << "Ausentes: ";
+    // for (int i = 0; i < sol.abs_costumers.size(); i++) {
+    //     cout << sol.abs_costumers[i] << " ";
+    // }
+    // cout << endl;
+
+    // cout << "Veiculos e suas informacoes: " << endl;
+    // for (int i = 0; i < sol.vehicles.size(); i++) {
+    //     cout << "Veiculo " << i+1 << ": ";
+    //     for (int j = 0; j < sol.vehicles[i].route.size(); j++) {
+    //         cout << sol.vehicles[i].route[j] << " -> ";
+    //     }
+    //     cout << endl;
+    // }
+
+    cout << endl << endl << "Custo de cada veiculo: "<< endl;
     for (int i = 0; i < sol.vehicles.size(); i++) {
-        cout << "Veiculo " << i+1 << ": ";
-        for (int j = 0; j < sol.vehicles[i].route.size() - 1; j++) {
-            cout << sol.vehicles[i].route[j] << " -> ";
-        }
-        cout << sol.vehicles[i].route[sol.vehicles[i].route.size() - 1] << endl;
+        cout << "Veiculo " << i+1 << ": " << endl;
+        cout << "Custo: " << sol.vehicles[i].cost << endl;
+        cout << "Custo que era pra ser: " << calc_cost_vehicle(sol.vehicles[i], data) << endl << endl;
     }
 
     return 0;

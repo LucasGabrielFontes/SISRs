@@ -187,12 +187,12 @@ void Data::read_instance(){
     adjList.resize(dimension); // Inicia a preencher a lista de adjacencias
 
     for (int i = 0; i < dimension; i++) {
-        adjList[i].resize(dimension); // Cada linha pode tem dimension clientes
+        adjList[i].resize(dimension-1); // Cada linha pode tem dimension clientes
     }
 
     for (int i = 0; i < dimension; i++) {
-        for (int j = 0; j < dimension; j++) {
-            adjList[i][j] = j+1;
+        for (int j = 0; j < dimension-1; j++) {
+            adjList[i][j] = j+2;
         }
     }
 

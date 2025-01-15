@@ -6,5 +6,6 @@
 Solution ruin(Solution , Data& );
 void remove_split_string(Solution & , Data& , int , int , int );
 void remove_string(Solution & , Data& , int , int , int );
+double calc_removal(Solution& , Data& );
 
 #endif
