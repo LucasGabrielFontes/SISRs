@@ -59,18 +59,53 @@ Solution ruin(Solution sol, Data& data) {
 
             int lt = floor(Random::getReal(1, ltMax + 1));
 
-            int rd = Random::getInt(0, 0);
+            int rd = Random::getInt(1, 1);
 
             if (rd == 0)
                 remove_string(sol, data, sol.costumer_to_vehicle[ct_star-1], lt, ct_star); // costumer_to_vehicle funciona assim
-            // else 
-            //     remove_split_string(sol, data, sol.costumer_to_vehicle[ct_star-1], lt, ct_star);
+            else 
+                remove_split_string(sol, data, sol.costumer_to_vehicle[ct_star-1], lt, ct_star);
 
             R.push_back(sol.costumer_to_vehicle[ct_star]);
         }
     }
 
     return sol;
+}
+
+void remove_split_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
+
+    auto& route = sol.vehicles[tour].route;
+
+    int m = 1;
+    int rd = Random::getReal(0, 1);
+    while (!(rd < ALPHA || m == sol.vehicles[tour].route.size() - size_string)) {
+        m += 1;
+        rd = Random::getInt(0, 1);
+    }
+
+    size_string += m;
+
+    auto it = find(route.begin(), route.end(), costumer_remove); // Iterador para o local onde o costumer_remove esta
+    int ind = (it != route.end()) ? std::distance(route.begin(), it) : -1; // Indice do costumer_remove em sua rota
+
+    int size_block1;
+    int size_block2;
+
+    definesBlockSize(ind, size_string, size_block1, size_block2, route);
+
+    cout << "Rota: ";
+    for (int i = 0; i < route.size()-1; i++) {
+        cout << route[i] << " -> ";
+    }
+    cout << route[route.size()-1] << endl;
+
+    // cout << "Cliente que tem que ser removido: " << costumer_remove << endl;
+    // cout << "Indice do cliente a ser removido: " << ind << endl;
+    // cout << "Tamanho da string: " << size_string << endl;
+    // cout << "Tamanho do m: " << m << endl;
+    // cout << "Tamanho do primeiro bloco: " << size_block1 << endl;
+    // cout << "Tamanho do segundo bloco: " << size_block2 << endl << endl;
 }
 
 void remove_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
@@ -88,25 +123,7 @@ void remove_string(Solution &sol, Data& data, int tour, int size_string, int cos
     int size_block1;
     int size_block2;
 
-    // Tamanho do bloco que vem antes do costumer_remove
-    if (ind - size_string > 0) {
-        size_block1 = Random::getInt(0, size_string - 1);
-    } else {
-        size_block1 = Random::getInt(0, ind - 1);
-    }
-
-    size_block2 = size_string - size_block1 - 1; // Quando size_block1 = 0, tem um pequeno detalhe
-
-    if (ind + size_block2 >= route.size()-1) { // Rearranja os tamanhos
-        while ((ind + size_block2 >= route.size()-1) && (ind - size_block1 - 1 > 0)) {
-            size_block1++;
-            size_block2--;
-        }
-    }
-
-    if (ind + size_block2 >= route.size()-1) { // Tamanho do bloco 2 tem que ser 0
-        size_block2 = 0;
-    }
+    definesBlockSize(ind, size_string, size_block1, size_block2, route);
 
     const int b = ind - size_block1;
     const int e = ind + size_block2;
@@ -150,6 +167,28 @@ void remove_string(Solution &sol, Data& data, int tour, int size_string, int cos
     // cout << "Tamanho da string: " << size_string << endl;
     // cout << "Tamanho do primeiro bloco: " << size_block1 << endl;
     // cout << "Tamanho do segundo bloco: " << size_block2 << endl << endl;
+}
+
+void definesBlockSize(int ind, int size_string, int& size_block1, int &size_block2, vector<int>& route) {
+    // Tamanho do bloco que vem antes do costumer_remove
+    if (ind - size_string > 0) {
+        size_block1 = Random::getInt(0, size_string - 1);
+    } else {
+        size_block1 = Random::getInt(0, ind - 1);
+    }
+
+    size_block2 = size_string - size_block1 - 1; // Quando size_block1 = 0, tem um pequeno detalhe
+
+    if (ind + size_block2 >= route.size()-1) { // Rearranja os tamanhos
+        while ((ind + size_block2 >= route.size()-1) && (ind - size_block1 - 1 > 0)) {
+            size_block1++;
+            size_block2--;
+        }
+    }
+
+    if (ind + size_block2 >= route.size()-1) { // Tamanho do bloco 2 tem que ser 0
+        size_block2 = 0;
+    }
 }
 
 bool belongsTo(int obj, vector<int> strc) {
