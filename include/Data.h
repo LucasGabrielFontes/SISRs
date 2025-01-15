@@ -19,7 +19,7 @@ public:
 
     inline int get_dimension() const {return dimension;};
     inline int get_capacity() {return capacity;};
-    inline int get_depot() {return depot;};
+    inline int get_depot() const {return depot;};
 
     inline string get_instance_name() {return instance_name;};
     inline string get_problem_type() {return problem_type;};
