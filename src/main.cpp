@@ -7,6 +7,8 @@
 #include "../include/Ruin.h"
 #include "../include/Recreate.h"
 
+#include "../include/FleetMinimization.h"
+
 #define EP 1e-9
 
 void details_solution(Solution & , Data & );
@@ -21,13 +23,11 @@ int main(int argc, char** argv) {
 
     Solution sol = Construction(data);
 
-    sol = ruin(sol, data);
+    sol = ruin_recreate(sol, data);
 
-    cout << "Arruinado: " << endl << endl;
-    details_solution(sol, data);
+    sol = fleet_minimization(sol, data);
 
-    sol = recreate(sol, data);
-    cout << "Reconstruido: " << endl << endl;
+    cout << "Solucao eita: " << endl << endl;
     details_solution(sol, data);
 
     return 0;
