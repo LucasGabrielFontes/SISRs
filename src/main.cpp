@@ -9,7 +9,7 @@
 
 #include "../include/FleetMinimization.h"
 
-#define EP 1e-9
+#define EP 1e-12
 
 void details_solution(Solution & , Data & );
 
