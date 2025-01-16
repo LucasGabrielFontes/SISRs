@@ -59,7 +59,7 @@ Solution ruin(Solution sol, Data& data) {
 
             int lt = floor(Random::getReal(1, ltMax + 1));
 
-            int rd = Random::getInt(1, 1);
+            int rd = Random::getInt(0, 1);
 
             if (rd == 0)
                 remove_string(sol, data, sol.costumer_to_vehicle[ct_star-1], lt, ct_star); // costumer_to_vehicle funciona assim
@@ -94,18 +94,101 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
 
     definesBlockSize(ind, size_string, size_block1, size_block2, route);
 
-    cout << "Rota: ";
-    for (int i = 0; i < route.size()-1; i++) {
-        cout << route[i] << " -> ";
+    int comp1 = ind - size_block1 + 1;
+    int comp2 = ind + size_block2 - m;
+    int ind_stay = -1;
+
+    if (comp2 < comp1)
+        ind_stay = ind;
+    else 
+        ind_stay = Random::getInt(comp1, comp2); // Take care
+
+    int b1 = ind - size_block1;
+    int e1 = ind_stay - 1;
+    int b2 = ind_stay + m;
+    int e2 = ind + size_block2; 
+
+    if (b1 > e1) {
+        b1 = -1;
+        e1 = -1;
     }
-    cout << route[route.size()-1] << endl;
+
+    if (b2 > e2) {
+        b2 = -1;
+        e2 = -1;
+    }
+
+    // Atualiza a lista de clientes ausentes da solucao
+    // Atualiza a lista costumer_to_vehicle da solucao
+    // Atualiza a capacidade usada de cada veiculo que teve sua rota modificada
+    auto& vehicle = sol.vehicles[tour];
+    for (int i = b1; i <= e1 && i >= 0; i++) {
+        int costumer = route[i];
+        sol.abs_costumers.push_back(costumer);
+        sol.costumer_to_vehicle[costumer-1] = -1;
+        vehicle.capacity_used -= data.get_demand(costumer);
+    }
+    for (int i = b2; i <= e2 && i >= 0; i++) {
+        int costumer = route[i];
+        sol.abs_costumers.push_back(costumer);
+        sol.costumer_to_vehicle[costumer-1] = -1;
+        vehicle.capacity_used -= data.get_demand(costumer);
+    }
+
+    // Atualiza os custos da solucao e dos veiculos que tiveram suas rotas modificadas
+    for (int i = b1-1; i < e1+1 && i >= 0; i++) {
+        int costumer = route[i];
+        int costumer_next = route[i+1];
+        double removal_cost = data.get_distance(costumer, costumer_next);
+        sol.cost -= removal_cost;
+        vehicle.cost -= removal_cost;
+    }
+    if (b1 > 0 && e1 > 0) {
+        sol.cost += data.get_distance(route[b1-1], route[e1+1]);
+        vehicle.cost += data.get_distance(route[b1-1], route[e1+1]);
+    }
+
+    for (int i = b2-1; i < e2+1 && i >= 0; i++) {
+        int costumer = route[i];
+        int costumer_next = route[i+1];
+        double removal_cost = data.get_distance(costumer, costumer_next);
+        sol.cost -= removal_cost;
+        vehicle.cost -= removal_cost;
+    }
+    if (b2 > 0 && e2 > 0) {
+        sol.cost += data.get_distance(route[b2-1], route[e2+1]);
+        vehicle.cost += data.get_distance(route[b2-1], route[e2+1]);
+    }
+
+    route.erase(route.begin() + ind_stay + m, route.begin() + ind + size_block2 + 1); // SEGMETATION FAULT AQUI
+    route.erase(route.begin() + ind - size_block1, route.begin() + ind_stay);
+
+    if (route.size() == 2) { // Do deposito para o deposito: 1 -> 1
+        vehicle.cost = 0;
+        // Retira o veiculo
+        sol.vehicles.erase(sol.vehicles.begin() + tour);
+        cout << "================================= Um foi removido =================================" << endl;
+        for (int i = 0; i < data.get_dimension(); i++) {
+            if (sol.costumer_to_vehicle[i] > tour) {
+                sol.costumer_to_vehicle[i]--;
+            }
+        }
+    }
+
+    // cout << "Rota: ";
+    // for (int i = 0; i < route.size()-1; i++) {
+    //     cout << route[i] << " -> ";
+    // }
+    // cout << route[route.size()-1] << endl;
 
     // cout << "Cliente que tem que ser removido: " << costumer_remove << endl;
     // cout << "Indice do cliente a ser removido: " << ind << endl;
     // cout << "Tamanho da string: " << size_string << endl;
     // cout << "Tamanho do m: " << m << endl;
+    // cout << "ind_stay: " << ind_stay << endl;
     // cout << "Tamanho do primeiro bloco: " << size_block1 << endl;
-    // cout << "Tamanho do segundo bloco: " << size_block2 << endl << endl;
+    // cout << "Tamanho do segundo bloco: " << size_block2 << endl;
+    // cout << b1 << " " << e1 << "  " << b2 << " " << e2 << endl << endl;
 }
 
 void remove_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
@@ -154,6 +237,14 @@ void remove_string(Solution &sol, Data& data, int tour, int size_string, int cos
 
     if (route.size() == 2) { // Do deposito para o deposito: 1 -> 1
         vehicle.cost = 0;
+        // Retira o veiculo
+        sol.vehicles.erase(sol.vehicles.begin() + tour);
+        cout << "================================= Um foi removido =================================" << endl;
+        for (int i = 0; i < data.get_dimension(); i++) {
+            if (sol.costumer_to_vehicle[i] > tour) {
+                sol.costumer_to_vehicle[i]--;
+            }
+        }
     }
 
     // cout << "Rota: ";

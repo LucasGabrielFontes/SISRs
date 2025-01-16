@@ -7,6 +7,8 @@
 #include "../include/Ruin.h"
 #include "../include/Recreate.h"
 
+#define EP 1e-9
+
 void details_solution(Solution & , Data & );
 
 int main(int argc, char** argv) {
@@ -51,7 +53,14 @@ void details_solution(Solution &sol, Data &data) {
     cout << endl << endl << "Custo de cada veiculo: "<< endl;
     for (int i = 0; i < sol.vehicles.size(); i++) {
         cout << "Veiculo " << i+1 << ": " << endl;
-        cout << "Custo: " << sol.vehicles[i].cost << endl;
-        cout << "Custo que era pra ser: " << calc_cost_vehicle(sol.vehicles[i], data) << endl << endl;
+        double custoTrue = sol.vehicles[i].cost;
+        double custo = calc_cost_vehicle(sol.vehicles[i], data);
+        if (fabs(custoTrue - custo) < EP) {
+            cout << "Custos iguais" << endl;
+        } else {
+            cout << "Custo diferentes. Ai eh triste AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl;
+        }
+        cout << "Custo: " << custo << endl;
+        cout << "Custo que era pra ser: " << custo << endl << endl;
     }
 }
