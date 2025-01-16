@@ -9,7 +9,7 @@
 
 #include "../include/FleetMinimization.h"
 
-#define EP 1e-9
+#define EP 1e-8
 
 void details_solution(Solution & , Data & );
 
@@ -23,9 +23,11 @@ int main(int argc, char** argv) {
 
     Solution sol = Construction(data);
 
-    sol = ruin_recreate(sol, data);
+    // sol = ruin_recreate(sol, data);
 
     sol = fleet_minimization(sol, data);
+
+    sol = Solution_SA(sol, data);
 
     cout << "Solucao eita: " << endl << endl;
     details_solution(sol, data);
@@ -61,6 +63,16 @@ void details_solution(Solution &sol, Data &data) {
             cout << "Custo diferentes. Ai eh triste AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl;
         }
         cout << "Custo: " << custo << endl;
-        cout << "Custo que era pra ser: " << custo << endl << endl;
+        cout << "Custo que era pra ser: " << custo << endl;
     }
+
+    double custoTrue = sol.cost;
+    double custo = calc_cost_solution(sol, data);
+    if (fabs(custoTrue - custo) < EP) {
+        cout << "\nCustos iguais" << endl;
+    } else {
+        cout << "\nCusto diferentes. Ai eh triste AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl;
+    }
+    cout << "Custo da solucao: " << custoTrue << endl;
+    cout << "Custo que era pra ser: " << custo << endl << endl;
 }

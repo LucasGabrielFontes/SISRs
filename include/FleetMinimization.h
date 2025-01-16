@@ -8,7 +8,6 @@ int sumAbs(const Solution& );
 int sumAbsTuor(const Solution& , int );
 void update_absC(Solution& );
 
-
 void details_solution1(Solution & , Data & );
 
 #endif

@@ -3,6 +3,6 @@
 
 #include "Solution.h"
 
-void LocalSearch(Solution& , Data& );
+Solution LocalSearch(Solution& , Data& );
 
 #endif

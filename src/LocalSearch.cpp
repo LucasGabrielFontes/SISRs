@@ -11,14 +11,13 @@
 #define Tf 1
 #define F 10000
 
-void LocalSearch(Solution& solution, Data& data) { // struct
+Solution LocalSearch(Solution& solution, Data& data) { // struct
 
     Solution best_sol = solution;
     double T = T0;
     for (int i = 0; i < F; i++) {
 
-        Solution solution_star = ruin(solution, data);
-        solution_star = recreate(solution_star, data);
+        Solution solution_star = ruin_recreate(solution, data);
         if (solution_star.cost < solution.cost - T*log(Random::getReal(0+EP, 1-EP))) {
             solution = solution_star;
         }
@@ -30,4 +29,5 @@ void LocalSearch(Solution& solution, Data& data) { // struct
 
         T = c*T;
     }
+    return best_sol;
 }
