@@ -35,17 +35,6 @@ Solution ruin(Solution sol, Data& data) {
 
     int csSeed = Random::getInt(2, data.get_dimension()); // O proprio cliente, nao o indice
 
-    // cout << "Adjacencia de " << csSeed << ": " << endl;
-
-    // for (int i = 1; i < data.get_dimension(); i++) {
-    //     cout << data.get_adj(csSeed, i) << endl;
-    // }
-
-    // cout << "\nDistancias: " << endl;
-    // for (int i = 1; i < data.get_dimension(); i++) {
-    //     cout << data.get_distance(csSeed, data.get_adj(csSeed, i)) << endl;
-    // }
-
     vector<int> R = {};
 
     for (int i = 1; i <= data.get_dimension() && R.size() < ks; i++) { // get_adj necessita assim
@@ -167,28 +156,12 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
         vehicle.cost = 0;
         // Retira o veiculo
         sol.vehicles.erase(sol.vehicles.begin() + tour);
-        cout << "================================= Um foi removido =================================" << endl;
         for (int i = 0; i < data.get_dimension(); i++) {
             if (sol.costumer_to_vehicle[i] > tour) {
                 sol.costumer_to_vehicle[i]--;
             }
         }
     }
-
-    // cout << "Rota: ";
-    // for (int i = 0; i < route.size()-1; i++) {
-    //     cout << route[i] << " -> ";
-    // }
-    // cout << route[route.size()-1] << endl;
-
-    // cout << "Cliente que tem que ser removido: " << costumer_remove << endl;
-    // cout << "Indice do cliente a ser removido: " << ind << endl;
-    // cout << "Tamanho da string: " << size_string << endl;
-    // cout << "Tamanho do m: " << m << endl;
-    // cout << "ind_stay: " << ind_stay << endl;
-    // cout << "Tamanho do primeiro bloco: " << size_block1 << endl;
-    // cout << "Tamanho do segundo bloco: " << size_block2 << endl;
-    // cout << b1 << " " << e1 << "  " << b2 << " " << e2 << endl << endl;
 }
 
 void remove_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
@@ -239,25 +212,12 @@ void remove_string(Solution &sol, Data& data, int tour, int size_string, int cos
         vehicle.cost = 0;
         // Retira o veiculo
         sol.vehicles.erase(sol.vehicles.begin() + tour);
-        cout << "================================= Um foi removido =================================" << endl;
         for (int i = 0; i < data.get_dimension(); i++) {
             if (sol.costumer_to_vehicle[i] > tour) {
                 sol.costumer_to_vehicle[i]--;
             }
         }
     }
-
-    // cout << "Rota: ";
-    // for (int i = 0; i < route.size()-1; i++) {
-    //     cout << route[i] << " -> ";
-    // }
-    // cout << route[route.size()-1] << endl;
-
-    // cout << "Cliente que tem que ser removido: " << costumer_remove << endl;
-    // cout << "Indice do cliente a ser removido: " << ind << endl;
-    // cout << "Tamanho da string: " << size_string << endl;
-    // cout << "Tamanho do primeiro bloco: " << size_block1 << endl;
-    // cout << "Tamanho do segundo bloco: " << size_block2 << endl << endl;
 }
 
 void definesBlockSize(int ind, int size_string, int& size_block1, int &size_block2, vector<int>& route) {
@@ -280,6 +240,39 @@ void definesBlockSize(int ind, int size_string, int& size_block1, int &size_bloc
     if (ind + size_block2 >= route.size()-1) { // Tamanho do bloco 2 tem que ser 0
         size_block2 = 0;
     }
+}
+
+void details_split_string(vector<int>& route, int ind, int costumer_remove, int size_string, int size_block1, int size_block2, int ind_stay, int b1, int e1, int b2, int e2, int m) {
+
+    cout << "Rota: ";
+    for (int i = 0; i < route.size()-1; i++) {
+        cout << route[i] << " -> ";
+    }
+    cout << route[route.size()-1] << endl;
+
+    cout << "Cliente que tem que ser removido: " << costumer_remove << endl;
+    cout << "Indice do cliente a ser removido: " << ind << endl;
+    cout << "Tamanho da string: " << size_string << endl;
+    cout << "Tamanho do m: " << m << endl;
+    cout << "ind_stay: " << ind_stay << endl;
+    cout << "Tamanho do primeiro bloco: " << size_block1 << endl;
+    cout << "Tamanho do segundo bloco: " << size_block2 << endl;
+    cout << b1 << " " << e1 << "  " << b2 << " " << e2 << endl << endl;
+}
+
+void details_string(vector<int>& route, int ind, int costumer_remove, int size_string, int size_block1, int size_block2) {
+
+    cout << "Rota: ";
+    for (int i = 0; i < route.size()-1; i++) {
+        cout << route[i] << " -> ";
+    }
+    cout << route[route.size()-1] << endl;
+
+    cout << "Cliente que tem que ser removido: " << costumer_remove << endl;
+    cout << "Indice do cliente a ser removido: " << ind << endl;
+    cout << "Tamanho da string: " << size_string << endl;
+    cout << "Tamanho do primeiro bloco: " << size_block1 << endl;
+    cout << "Tamanho do segundo bloco: " << size_block2 << endl << endl;
 }
 
 bool belongsTo(int obj, vector<int> strc) {
