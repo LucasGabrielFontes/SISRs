@@ -9,7 +9,7 @@
 
 #include "../include/FleetMinimization.h"
 
-#define EP 1e-8
+#define EP 1e-9
 
 void details_solution(Solution & , Data & );
 
@@ -23,11 +23,9 @@ int main(int argc, char** argv) {
 
     Solution sol = Construction(data);
 
-    // sol = ruin_recreate(sol, data);
-
     sol = fleet_minimization(sol, data);
 
-    sol = Solution_SA(sol, data);
+    sol = LocalSearch(sol, data);
 
     cout << "Solucao eita: " << endl << endl;
     details_solution(sol, data);

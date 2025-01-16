@@ -39,12 +39,13 @@ Solution ruin(Solution sol, Data& data) {
 
     for (int i = 1; i <= data.get_dimension() && R.size() < ks; i++) { // get_adj necessita assim
 
-        if (!belongsTo(data.get_adj(csSeed, i), sol.abs_costumers)
-            && !belongsTo(sol.costumer_to_vehicle[data.get_adj(csSeed, i)], R)) {
+        int adj = data.get_adj(csSeed, i);
+        if (sol.costumer_to_vehicle[adj-1] != -1
+            && !belongsTo(sol.costumer_to_vehicle[data.get_adj(csSeed, i)-1], R)) {
 
             int ct_star = data.get_adj(csSeed, i); // ct_star eh o proprio cliente, nao o indice
 
-            double ltMax = min(static_cast<double>(sol.vehicles[sol.costumer_to_vehicle[ct_star]].route.size()), lsMax);
+            double ltMax = min(static_cast<double>(sol.vehicles[sol.costumer_to_vehicle[ct_star-1]].route.size()), lsMax);
 
             int lt = floor(Random::getReal(1, ltMax + 1));
 
@@ -55,7 +56,7 @@ Solution ruin(Solution sol, Data& data) {
             else 
                 remove_split_string(sol, data, sol.costumer_to_vehicle[ct_star-1], lt, ct_star);
 
-            R.push_back(sol.costumer_to_vehicle[ct_star]);
+            R.push_back(sol.costumer_to_vehicle[ct_star-1]);
         }
     }
 

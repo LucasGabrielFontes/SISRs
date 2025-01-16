@@ -9,7 +9,7 @@
 #define EP 1e-9
 #define T0 100
 #define Tf 1
-#define F 10000
+#define F 10000000
 
 Solution LocalSearch(Solution& solution, Data& data) { // struct
 

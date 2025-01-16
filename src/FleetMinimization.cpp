@@ -23,6 +23,7 @@ Solution fleet_minimization(Solution& sol, Data& data) {
         for (int i = 2; i <= data.get_dimension(); i++) {
             sStar.absC[i-1] = 0;
         }
+
         sStar = ruin_recreate(sStar, data);
 
         if (sStar.abs_costumers.size() < sol.abs_costumers.size() || sumAbs(sStar) < sumAbs(sol)) {
