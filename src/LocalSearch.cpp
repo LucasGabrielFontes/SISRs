@@ -6,20 +6,19 @@
 #include <cmath>
 #include <algorithm>
 
-#define EP 1e-9
 #define T0 100
 #define Tf 1
 
 Solution LocalSearch(Solution& solution, Data& data) { // struct
 
-    int F = 10000; //it_v(data.get_dimension());
+    int F = 100000; // it_v(data.get_dimension());
 
     Solution best_sol = solution;
     double T = T0;
     for (int i = 0; i < F; i++) {
 
         Solution solution_star = ruin_recreate(solution, data);
-        if (solution_star.cost < solution.cost - T*log(Random::getReal(0+EP, 1-EP))) {
+        if (solution_star.cost < solution.cost - T*log(Random::getReal(0, 1))) {
             solution = solution_star;
         }
         if (solution_star.cost < best_sol.cost) {

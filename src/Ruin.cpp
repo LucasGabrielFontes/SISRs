@@ -70,7 +70,7 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
     int rd = Random::getReal(0, 1);
     while (!(rd < ALPHA || m == sol.vehicles[tour].route.size() - size_string)) {
         m += 1;
-        rd = Random::getInt(0, 1);
+        rd = Random::getReal(0, 1);
     }
 
     size_string += m;
