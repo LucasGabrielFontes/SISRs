@@ -11,7 +11,6 @@
 #define F 10000
 
 Solution Solution_SA(Data& data) {
-    
     Solution sol = Construction(data);
     sol = fleet_minimization(sol, data);
     sol = LocalSearch(sol, data);
@@ -19,10 +18,8 @@ Solution Solution_SA(Data& data) {
 }
 
 Solution ruin_recreate(Solution& sol, Data& data) {
-
     Solution solution = ruin(sol, data);
     solution = recreate(solution, data);
-    update_absC(solution);
     return solution;
 }
 

@@ -11,7 +11,7 @@
 
 Solution LocalSearch(Solution& solution, Data& data) { // struct
 
-    int F = 100000; // it_v(data.get_dimension());
+    int F = 10000; // it_v(data.get_dimension());
 
     Solution best_sol = solution;
     double T = T0;

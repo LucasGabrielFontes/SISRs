@@ -59,6 +59,19 @@ Solution ruin(Solution sol, Data& data) {
         }
     }
 
+    for (int i = sol.vehicles.size()-1; i >= 0; i--) {
+
+        if (sol.vehicles[i].route.size() == 2) { // Do deposito para o deposito: 1 -> 1
+            // Retira o veiculo
+            sol.vehicles.erase(sol.vehicles.begin() + i);
+            for (int j = 0; j < data.get_dimension(); j++) {
+                if (sol.costumer_to_vehicle[j] > i) {
+                    sol.costumer_to_vehicle[j]--;
+                }
+            }
+        }
+    }
+
     return sol;
 }
 
@@ -152,16 +165,6 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
     route.erase(route.begin() + ind_stay + m, route.begin() + ind + size_block2 + 1); // SEGMETATION FAULT AQUI
     route.erase(route.begin() + ind - size_block1, route.begin() + ind_stay);
 
-    if (route.size() == 2) { // Do deposito para o deposito: 1 -> 1
-        vehicle.cost = 0;
-        // Retira o veiculo
-        sol.vehicles.erase(sol.vehicles.begin() + tour);
-        for (int i = 0; i < data.get_dimension(); i++) {
-            if (sol.costumer_to_vehicle[i] > tour) {
-                sol.costumer_to_vehicle[i]--;
-            }
-        }
-    }
 }
 
 void remove_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
@@ -208,16 +211,6 @@ void remove_string(Solution &sol, Data& data, int tour, int size_string, int cos
 
     route.erase(sol.vehicles[tour].route.begin() + b, route.begin() + e + 1);
 
-    if (route.size() == 2) { // Do deposito para o deposito: 1 -> 1
-        vehicle.cost = 0;
-        // Retira o veiculo
-        sol.vehicles.erase(sol.vehicles.begin() + tour);
-        for (int i = 0; i < data.get_dimension(); i++) {
-            if (sol.costumer_to_vehicle[i] > tour) {
-                sol.costumer_to_vehicle[i]--;
-            }
-        }
-    }
 }
 
 void definesBlockSize(int ind, int size_string, int& size_block1, int &size_block2, vector<int>& route) {
