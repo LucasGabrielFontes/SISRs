@@ -9,9 +9,10 @@
 #define EP 1e-9
 #define T0 100
 #define Tf 1
-#define F 10000
 
 Solution LocalSearch(Solution& solution, Data& data) { // struct
+
+    int F = it_v(data.get_dimension());
 
     Solution best_sol = solution;
     double T = T0;
@@ -30,4 +31,8 @@ Solution LocalSearch(Solution& solution, Data& data) { // struct
         T = c*T;
     }
     return best_sol;
+}
+
+int it_v(int v) {
+    return static_cast<int>(std::round(3e7 + ((v - 100) * 2.7e8 / 900)));
 }

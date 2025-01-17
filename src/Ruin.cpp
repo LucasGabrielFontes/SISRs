@@ -4,7 +4,6 @@
 
 #define C_ 10
 #define L_MAX 10
-
 #define ALPHA 0.01
 
 /*

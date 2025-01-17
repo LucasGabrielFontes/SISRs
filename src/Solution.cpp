@@ -4,51 +4,18 @@
 #include "../include/Ruin.h"
 #include "../include/Recreate.h"
 #include "../include/random.h"
+#include "../include/FleetMinimization.h"
 
 #define T0 100
 #define Tf 1
 #define F 10000
 
-Solution Solution_SA(Solution& sol, Data& data) {
-    Solution best_sol = sol;
-
-    int IterT = 0;
-    double T = T0;
-
-    while (T > Tf) {
-
-        int SAmax = it_v(data.get_dimension());
-        while (IterT < SAmax) {
-
-            IterT++;
-
-            Solution solution = LocalSearch(sol, data);
-
-            double DELTA = solution.cost - sol.cost;
-
-            if (DELTA < 0) {
-                sol = solution;
-                if (solution.cost < best_sol.cost) {
-                    best_sol = solution;
-                }
-            } else {
-                double x = Random::getReal(0, 1);
-                if (x < exp(-DELTA/T)) {
-                    sol = solution;
-                }
-            }
-        }
-
-        double c = pow((Tf/T0), (1/F));
-        T *= c;
-        IterT = 0;
-    }
-
-    return best_sol;
-}
-
-int it_v(int v) {
-    return static_cast<int>(std::round(3e7 + ((v - 100) * 2.7e8 / 900)));;
+Solution Solution_SA(Data& data) {
+    
+    Solution sol = Construction(data);
+    sol = fleet_minimization(sol, data);
+    sol = LocalSearch(sol, data);
+    return sol;
 }
 
 Solution ruin_recreate(Solution& sol, Data& data) {

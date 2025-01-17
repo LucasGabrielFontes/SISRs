@@ -2,7 +2,6 @@
 #include "../include/random.h"
 #include <algorithm>
 
-#define EP 1e-9
 #define BETA 0.01
 
 Solution recreate (Solution sol, Data& data) {
@@ -51,7 +50,7 @@ Solution recreate (Solution sol, Data& data) {
         for (int t : vehicle_indx) {
             if (sol.vehicles[t].capacity_used + data.get_demand(c) <= data.get_capacity()) {
                 for (int pos = 0; pos < sol.vehicles[t].route.size() - 1; pos++) {
-                    if (Random::getReal(0 + EP, 1 - EP) < 1 - BETA) {
+                    if (Random::getReal(0, 1) < 1 - BETA) {
                         if (P == comp || 
                             (calc_cost(sol, data, t, pos, c) < calc_cost(sol, data, P.first, P.second, c))) {
                             P = {t, pos};

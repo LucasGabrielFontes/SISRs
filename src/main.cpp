@@ -9,7 +9,7 @@
 
 #include "../include/FleetMinimization.h"
 
-#define EP 1e-12
+#define EP 1e-6
 
 void details_solution(Solution & , Data & );
 
@@ -21,11 +21,7 @@ int main(int argc, char** argv) {
     auto data = Data(argc, argv[1]);
     data.read_instance();
 
-    Solution sol = Construction(data);
-
-    sol = fleet_minimization(sol, data);
-
-    sol = LocalSearch(sol, data);
+    Solution sol = Solution_SA(data);
 
     cout << "Solucao eita: " << endl << endl;
     details_solution(sol, data);
@@ -62,6 +58,8 @@ void details_solution(Solution &sol, Data &data) {
         }
         cout << "Custo: " << custo << endl;
         cout << "Custo que era pra ser: " << custo << endl;
+        cout << "Capacidade usada: " << sol.vehicles[i].capacity_used << endl;
+        cout << "Capacidade maxima: " << data.get_capacity() << endl << endl;
     }
 
     double custoTrue = sol.cost;

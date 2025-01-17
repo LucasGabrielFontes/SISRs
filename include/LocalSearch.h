@@ -4,5 +4,6 @@
 #include "Solution.h"
 
 Solution LocalSearch(Solution& , Data& );
+int it_v(int );
 
 #endif

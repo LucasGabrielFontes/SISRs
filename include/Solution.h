@@ -13,9 +13,8 @@ struct Solution {
 
 double calc_cost_solution(const struct Solution&, const Data &);
 Solution ruin_recreate(Solution& , Data& );
-Solution Solution_SA(Solution&, Data& );
+Solution Solution_SA(Data& );
 Solution Construction(Data& );
 void update_absC(Solution& );
-int it_v(int );
 
 #endif
