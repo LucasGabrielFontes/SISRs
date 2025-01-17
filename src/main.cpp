@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
 
     Solution sol = Solution_SA(data);
 
-    cout << "Solucao eita: " << endl << endl;
+    cout << "Solucao: " << endl << endl;
     details_solution(sol, data);
 
     return 0;
@@ -32,43 +32,44 @@ int main(int argc, char** argv) {
 void details_solution(Solution &sol, Data &data) {
 
     cout << "Ausentes: ";
-    for (int i = 0; i < sol.abs_costumers.size(); i++) {
-        cout << sol.abs_costumers[i] << " ";
+    if (sol.abs_costumers.size() == 0)
+        cout << "Nao ha clientes ausentes na solucao." << endl << endl;
+    else {
+        for (int i = 0; i < sol.abs_costumers.size(); i++)
+            cout << sol.abs_costumers[i] << " ";
+        cout << endl << endl;
     }
-    cout << endl;
 
-    cout << "Veiculos e suas informacoes: " << endl;
+    cout << "Veiculos e suas informacoes: " << endl << endl;
     for (int i = 0; i < sol.vehicles.size(); i++) {
-        cout << "Veiculo " << i+1 << ": ";
+        cout << "Veiculo " << i+1 << ": " << endl;
+        cout << "Rota: ";
         for (int j = 0; j < sol.vehicles[i].route.size()-1; j++) {
             cout << sol.vehicles[i].route[j] << " -> ";
         }
         cout << sol.vehicles[i].route[sol.vehicles[i].route.size()-1] << endl;
-    }
-
-    cout << endl << endl << "Custo de cada veiculo: "<< endl;
-    for (int i = 0; i < sol.vehicles.size(); i++) {
-        cout << "Veiculo " << i+1 << ": " << endl;
         double custoTrue = sol.vehicles[i].cost;
         double custo = calc_cost_vehicle(sol.vehicles[i], data);
+        cout << "Custo: " << custo << endl;
+        cout << "Custo correto: " << custo << endl;
         if (fabs(custoTrue - custo) < EP) {
             cout << "Custos iguais" << endl;
         } else {
-            cout << "Custo diferentes. Ai eh triste AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl;
+            cout << "Custo diferentes. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl;
         }
-        cout << "Custo: " << custo << endl;
-        cout << "Custo que era pra ser: " << custo << endl;
         cout << "Capacidade usada: " << sol.vehicles[i].capacity_used << endl;
         cout << "Capacidade maxima: " << data.get_capacity() << endl << endl;
     }
 
     double custoTrue = sol.cost;
     double custo = calc_cost_solution(sol, data);
-    if (fabs(custoTrue - custo) < EP) {
-        cout << "\nCustos iguais" << endl;
-    } else {
-        cout << "\nCusto diferentes. Ai eh triste AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl;
-    }
     cout << "Custo da solucao: " << custoTrue << endl;
-    cout << "Custo que era pra ser: " << custo << endl << endl;
+    cout << "Custo correto: " << custo << endl;
+    if (fabs(custoTrue - custo) < EP) {
+        cout << "Custos iguais" << endl;
+    } else {
+        cout << "Custo diferentes. AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" << endl << endl;
+    }
+
+    cout << "Quantidade de veiculos: " << sol.vehicles.size() << endl << endl;
 }

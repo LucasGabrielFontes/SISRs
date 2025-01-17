@@ -10,7 +10,7 @@
 
 Solution fleet_minimization(Solution& sol, Data& data) {
 
-    int ITS = it_v(data.get_dimension())/10;
+    int ITS = 10000;//it_v(data.get_dimension())/10;
     Solution sBest = sol;
 
     for (int i = 2; i <= data.get_dimension(); i++) {

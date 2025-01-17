@@ -9,10 +9,10 @@ Solution recreate (Solution sol, Data& data) {
     random_device rd;   // Gerador de números aleatórios
     mt19937 gen(rd());  // Mersenne Twister com seed aleatória
 
-    // Distribuição DISCRETA com pesos: A=4, B=4, C=2, D=1
+    // Distribuição DISCRETA com pesos: 4, 4, 2, 1, com descrito no artigo
     std::discrete_distribution<> dist({4, 4, 2, 1});
 
-    // Retorna um tipo de sort com base nos pesos determinados previamente
+    // Determina o tipo de sort aleatorio a ser realizado com base nos pesos determinados previamente
     int st = dist(gen);
 
     switch (st) {
@@ -30,30 +30,33 @@ Solution recreate (Solution sol, Data& data) {
             break;
     }
 
-    int cont = 0;
-
     for (size_t i = 0; i < sol.abs_costumers.size(); ) { // Nao precisa incrementar i por causa do erase
         int c = sol.abs_costumers[i];
 
         pair<int, int> P = {-1, -1}; 
-        pair<int, int> comp = {-1, -1};
+        double insert_costP = std::numeric_limits<double>::infinity();
+        bool found_place = false;
+        // pair<int, int> null = {-1, -1};
 
         // P.first : veículo em que c será inserido
         // P.second : posição em que c será inserido na rota de P.first
 
-        vector<int> vehicle_indx(sol.vehicles.size());
-        for (int i = 0; i < sol.vehicles.size(); i++) {
-            vehicle_indx[i] = i;
-        }
-        shuffle(vehicle_indx.begin(), vehicle_indx.end(), gen);  // Embaralha os índices para o proximo ser ser aleatorio
+        // vector<int> vehicle_indx(sol.vehicles.size());
+        // for (int i = 0; i < sol.vehicles.size(); i++) {
+        //     vehicle_indx[i] = i;
+        // }
+        // shuffle(vehicle_indx.begin(), vehicle_indx.end(), gen);  // Embaralha os índices para o proximo ser ser aleatorio
 
-        for (int t : vehicle_indx) {
+        for (int t = 0; t < sol.vehicles.size(); t++) {
             if (sol.vehicles[t].capacity_used + data.get_demand(c) <= data.get_capacity()) {
                 for (int pos = 0; pos < sol.vehicles[t].route.size() - 1; pos++) {
                     if (Random::getReal(0, 1) < 1 - BETA) {
-                        if (P == comp || 
-                            (calc_cost(sol, data, t, pos, c) < calc_cost(sol, data, P.first, P.second, c))) {
+                        double insert_costPos = calc_cost(sol, data, t, pos, c);
+                        if (!found_place || 
+                            (insert_costPos < insert_costP)) {
                             P = {t, pos};
+                            insert_costP = insert_costPos;
+                            found_place = true;
                         }
                     }
                 }
@@ -61,7 +64,7 @@ Solution recreate (Solution sol, Data& data) {
         }
 
         // Atualiza as informações da solucao e dos veiculos
-        if (P == comp) {  // Não encontrou um ponto para inserir
+        if (!found_place) {  // Não encontrou um ponto para inserir
             Vehicle v;
             v.capacity_used += data.get_demand(c);
             v.cost += data.get_distance(data.get_depot(), c) + data.get_distance(c, data.get_depot());
