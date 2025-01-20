@@ -1,12 +1,12 @@
+#include <time.h>
+#include <chrono>
 #include "../include/Data.h"
 #include "../include/random.h"
-#include <time.h>
 
 #include "../include/Solution.h"
 #include "../include/LocalSearch.h"
 #include "../include/Ruin.h"
 #include "../include/Recreate.h"
-
 #include "../include/FleetMinimization.h"
 
 #define EP 1e-6
@@ -21,10 +21,14 @@ int main(int argc, char** argv) {
     auto data = Data(argc, argv[1]);
     data.read_instance();
 
+    auto begin = chrono::high_resolution_clock::now(); // Inicia a medição do tempo
     Solution sol = Solution_SA(data);
+    auto end = chrono::high_resolution_clock::now(); // Finaliza a medição do tempo
+    chrono::duration<double> time = end - begin; // Calcula a duração em milissegundos
 
     cout << "Solucao: " << endl << endl;
     details_solution(sol, data);
+    cout << "\nTempo de execucao: " << time.count() << endl;
 
     return 0;
 }

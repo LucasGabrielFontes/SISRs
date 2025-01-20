@@ -11,7 +11,8 @@
 
 Solution LocalSearch(Solution& solution, Data& data) { // struct
 
-    int F = 10000; // it_v(data.get_dimension());
+    int F = it_v(data.get_dimension());
+    double c = pow((Tf/T0), (1/F));
 
     Solution best_sol = solution;
     double T = T0;
@@ -25,9 +26,7 @@ Solution LocalSearch(Solution& solution, Data& data) { // struct
             best_sol = solution_star;
         }
 
-        double c = pow((Tf/T0), (1/F));
-
-        T = c*T;
+        T *= c;
     }
     return best_sol;
 }

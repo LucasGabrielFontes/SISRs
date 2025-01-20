@@ -26,7 +26,7 @@ lt: cardinalidade da string a ser removida no tuor t
 
 Solution ruin(Solution sol, Data& data) {
 
-    double lsMax = min(static_cast<double>(L_MAX), static_cast<double>(data.get_dimension())/sol.vehicles.size()); 
+    double lsMax = min(static_cast<double>(L_MAX), static_cast<double>(data.get_dimension()-1)/sol.vehicles.size()); 
 
     double ksMax = ((4*C_)/(1+lsMax))-1;
 
@@ -34,29 +34,32 @@ Solution ruin(Solution sol, Data& data) {
 
     int csSeed = Random::getInt(2, data.get_dimension()); // O proprio cliente, nao o indice
 
-    vector<int> R = {};
+    vector<bool> tourRuined(sol.vehicles.size(), false);
 
-    for (int i = 1; i <= data.get_dimension() && R.size() < ks; i++) { // get_adj necessita assim
+    int cont = 1;
+    int strings = 0;
+    while (cont <= data.get_dimension() && strings < ks) {
 
-        int adj = data.get_adj(csSeed, i);
-        if (sol.costumer_to_vehicle[adj-1] != -1
-            && !belongsTo(sol.costumer_to_vehicle[data.get_adj(csSeed, i)-1], R)) {
+        int ct_star = data.get_adj(csSeed, cont);
+        int indTour = sol.costumer_to_vehicle[ct_star-1];
+        if (sol.costumer_to_vehicle[ct_star-1] != -1 && tourRuined[indTour] == false) {
 
-            int ct_star = data.get_adj(csSeed, i); // ct_star eh o proprio cliente, nao o indice
-
-            double ltMax = min(static_cast<double>(sol.vehicles[sol.costumer_to_vehicle[ct_star-1]].route.size()), lsMax);
+            double ltMax = min(static_cast<double>(sol.vehicles[indTour].route.size()), lsMax);
 
             int lt = floor(Random::getReal(1, ltMax + 1));
 
             int rd = Random::getInt(0, 1);
 
-            if (rd == 0)
-                remove_string(sol, data, sol.costumer_to_vehicle[ct_star-1], lt, ct_star); // costumer_to_vehicle funciona assim
+            if (rd == 0 || lt == 2)
+                remove_string(sol, data, indTour, lt, ct_star); // costumer_to_vehicle funciona assim
             else 
-                remove_split_string(sol, data, sol.costumer_to_vehicle[ct_star-1], lt, ct_star);
-
-            R.push_back(sol.costumer_to_vehicle[ct_star-1]);
+                remove_split_string(sol, data, indTour, lt, ct_star);
+        
+            strings++;
+            tourRuined[indTour] = true;
         }
+
+        cont++;
     }
 
     for (int i = sol.vehicles.size()-1; i >= 0; i--) {
@@ -85,15 +88,17 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
         m += 1;
         rd = Random::getReal(0, 1);
     }
-
     size_string += m;
 
     auto it = find(route.begin(), route.end(), costumer_remove); // Iterador para o local onde o costumer_remove esta
     int ind = (it != route.end()) ? std::distance(route.begin(), it) : -1; // Indice do costumer_remove em sua rota
 
+    if (ind == -1) {
+        cout << "Erro na funcao remove_string" << endl;
+        exit(1);
+    }
     int size_block1;
     int size_block2;
-
     definesBlockSize(ind, size_string, size_block1, size_block2, route);
 
     int comp1 = ind - size_block1 + 1;
@@ -118,7 +123,7 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
     if (b2 > e2) {
         b2 = -1;
         e2 = -1;
-    }
+    }   
 
     // Atualiza a lista de clientes ausentes da solucao
     // Atualiza a lista costumer_to_vehicle da solucao
@@ -162,9 +167,8 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
         vehicle.cost += data.get_distance(route[b2-1], route[e2+1]);
     }
 
-    route.erase(route.begin() + ind_stay + m, route.begin() + ind + size_block2 + 1); // SEGMETATION FAULT AQUI
+    route.erase(route.begin() + ind_stay + m, route.begin() + ind + size_block2 + 1);
     route.erase(route.begin() + ind - size_block1, route.begin() + ind_stay);
-
 }
 
 void remove_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
@@ -210,7 +214,6 @@ void remove_string(Solution &sol, Data& data, int tour, int size_string, int cos
     vehicle.cost += data.get_distance(route[b-1], route[e+1]);
 
     route.erase(sol.vehicles[tour].route.begin() + b, route.begin() + e + 1);
-
 }
 
 void definesBlockSize(int ind, int size_string, int& size_block1, int &size_block2, vector<int>& route) {
@@ -266,10 +269,4 @@ void details_string(vector<int>& route, int ind, int costumer_remove, int size_s
     cout << "Tamanho da string: " << size_string << endl;
     cout << "Tamanho do primeiro bloco: " << size_block1 << endl;
     cout << "Tamanho do segundo bloco: " << size_block2 << endl << endl;
-}
-
-bool belongsTo(int obj, vector<int> strc) {
-    return (
-        !(find(strc.begin(), strc.end(), obj) == strc.end())
-    );
 }

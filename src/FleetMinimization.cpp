@@ -9,7 +9,7 @@
 
 Solution fleet_minimization(Solution& sol, Data& data) {
 
-    int ITS = 10000;// it_v(data.get_dimension())/10;
+    int ITS = it_v(data.get_dimension())/10;
     Solution sBest = sol;
 
     for (int i = 2; i <= data.get_dimension(); i++) {
@@ -24,7 +24,6 @@ Solution fleet_minimization(Solution& sol, Data& data) {
         // }
 
         Solution sStar = ruin_recreate(sol, data);
-
         update_absC(sStar);
 
         if (sStar.abs_costumers.size() < sol.abs_costumers.size() || sumAbs(sStar) < sumAbs(sol)) {

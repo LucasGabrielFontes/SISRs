@@ -71,7 +71,7 @@ Solution recreate (Solution sol, Data& data) {
             v.route = {data.get_depot(), c, data.get_depot()};
             sol.cost += v.cost;
             sol.vehicles.push_back(v);
-            sol.costumer_to_vehicle[c - 1] = sol.vehicles.size()-1;  // Associar o cliente ao novo veículo
+            sol.costumer_to_vehicle[c - 1] = sol.vehicles.size()-1;  // Associar o cliente ao novo veículo (retorna o indice)
         } else {
             sol.cost += calc_cost(sol, data, P.first, P.second, c);
             sol.costumer_to_vehicle[c - 1] = P.first;
