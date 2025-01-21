@@ -21,10 +21,10 @@ int main(int argc, char** argv) {
     auto data = Data(argc, argv[1]);
     data.read_instance();
 
-    auto begin = chrono::high_resolution_clock::now(); // Inicia a medição do tempo
+    auto begin = chrono::high_resolution_clock::now();
     Solution sol = Solution_SA(data);
-    auto end = chrono::high_resolution_clock::now(); // Finaliza a medição do tempo
-    chrono::duration<double> time = end - begin; // Calcula a duração em milissegundos
+    auto end = chrono::high_resolution_clock::now();
+    chrono::duration<double> time = end - begin;
 
     cout << "Solucao: " << endl << endl;
     details_solution(sol, data);

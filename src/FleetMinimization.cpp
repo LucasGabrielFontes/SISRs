@@ -3,10 +3,6 @@
 #include <climits>
 #include "../include/LocalSearch.h"
 
-//////
-#include <math.h>
-///////
-
 Solution fleet_minimization(Solution& sol, Data& data) {
 
     int ITS = it_v(data.get_dimension())/10;

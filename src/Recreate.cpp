@@ -36,8 +36,6 @@ Solution recreate (Solution sol, Data& data) {
         pair<int, int> P = {-1, -1}; 
         double insert_costP = std::numeric_limits<double>::infinity();
         bool found_place = false;
-        // pair<int, int> null = {-1, -1};
-
         // P.first : veículo em que c será inserido
         // P.second : posição em que c será inserido na rota de P.first
 

@@ -50,7 +50,7 @@ Solution ruin(Solution sol, Data& data) {
 
             int rd = Random::getInt(0, 1);
 
-            if (rd == 0 || lt == 2)
+            if (rd == 0)
                 remove_string(sol, data, indTour, lt, ct_star); // costumer_to_vehicle funciona assim
             else 
                 remove_split_string(sol, data, indTour, lt, ct_star);
