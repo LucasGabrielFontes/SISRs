@@ -1,6 +1,6 @@
+#include <algorithm>
 #include "../include/Ruin.h"
 #include "../include/random.h"
-#include <algorithm>
 
 #define C_ 10
 #define L_MAX 10

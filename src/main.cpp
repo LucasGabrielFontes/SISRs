@@ -2,12 +2,7 @@
 #include <chrono>
 #include "../include/Data.h"
 #include "../include/random.h"
-
 #include "../include/Solution.h"
-#include "../include/LocalSearch.h"
-#include "../include/Ruin.h"
-#include "../include/Recreate.h"
-#include "../include/FleetMinimization.h"
 
 #define EP 1e-6
 
@@ -57,7 +52,7 @@ void details_solution(Solution &sol, Data &data) {
         cout << route[route_size-1] << endl;
         double custoTrue = sol.vehicles[i].cost;
         double custo = calc_cost_vehicle(sol.vehicles[i], data);
-        cout << "Custo: " << custo << endl;
+        cout << "Custo: " << custoTrue << endl;
         cout << "Custo correto: " << custo << endl;
         if (fabs(custoTrue - custo) < EP) {
             cout << "Custos iguais" << endl;

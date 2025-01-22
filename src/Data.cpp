@@ -1,6 +1,6 @@
-#include "../include/Data.h"
 #include <math.h>
 #include <algorithm>
+#include "../include/Data.h"
 
 // Construtor
 Data::Data(int qt_params, char *instance):

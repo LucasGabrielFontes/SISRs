@@ -1,6 +1,6 @@
+#include <algorithm>
 #include "../include/Recreate.h"
 #include "../include/random.h"
-#include <algorithm>
 
 #define BETA 0.01
 

@@ -1,6 +1,6 @@
+#include <climits>
 #include "../include/FleetMinimization.h"
 #include "../include/Solution.h"
-#include <climits>
 #include "../include/LocalSearch.h"
 
 Solution fleet_minimization(Solution& sol, const Data& data) {

@@ -1,6 +1,5 @@
 #include "../include/Solution.h"
 #include "../include/LocalSearch.h"
-
 #include "../include/Ruin.h"
 #include "../include/Recreate.h"
 #include "../include/random.h"

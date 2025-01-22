@@ -1,10 +1,5 @@
 #include "../include/LocalSearch.h"
 #include "../include/random.h"
-#include "../include/Solution.h"
-#include "../include/Ruin.h"
-#include "../include/Recreate.h"
-#include <cmath>
-#include <algorithm>
 
 Solution LocalSearch(Solution& solution, const Data& data) { // struct
 
