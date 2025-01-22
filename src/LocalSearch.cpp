@@ -6,13 +6,16 @@
 #include <cmath>
 #include <algorithm>
 
-#define T0 100
-#define Tf 1
-
 Solution LocalSearch(Solution& solution, Data& data) { // struct
 
+    double T0 = 100.0;
+    double Tf = 1.0;
+    double EP = 1e-6;
+
     int F = it_v(data.get_dimension());
-    double c = pow((Tf/T0), (1/F));
+    double c = pow((Tf/T0), (1.0/(double)F)); // O erro tava aqui, rapaz, imoral
+
+    c -= EP;
 
     Solution best_sol = solution;
     double T = T0;
@@ -32,5 +35,5 @@ Solution LocalSearch(Solution& solution, Data& data) { // struct
 }
 
 int it_v(int v) {
-    return static_cast<int>(std::round(3e7 + ((v - 100) * 2.7e8 / 900)));
+    return 1e6;
 }

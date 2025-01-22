@@ -206,7 +206,7 @@ void Data::read_instance(){
 
 // Funcao para calcular a distancia euclidiana entre dois pontos
 double Data::calc_dist (double *x, double *y, int i, int j){
-	return sqrt(pow(x[i] - x[j], 2) + pow (y[i] - y[j], 2));
+	return round(sqrt(pow(x[i] - x[j], 2) + pow (y[i] - y[j], 2))); // Round bate exatamente com o gabarito do artigo
 }
 
 // Funcao para printar toda a matriz de distancias
