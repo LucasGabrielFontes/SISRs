@@ -3,21 +3,17 @@
 #include <climits>
 #include "../include/LocalSearch.h"
 
-Solution fleet_minimization(Solution& sol, Data& data) {
+Solution fleet_minimization(Solution& sol, const Data& data) {
 
-    int ITS = it_v(data.get_dimension())/10;
+    int dimension = data.get_dimension();
+    long long ITS = calculateIterations(dimension)/10;
     Solution sBest = sol;
 
-    for (int i = 2; i <= data.get_dimension(); i++) {
+    for (int i = 2; i <= dimension; i++) {
         sBest.absC[i-1] = 0;
     }
 
-    for (int i = 0; i < ITS; i++) {
-
-        // Solution sStar = sol;
-        // for (int i = 2; i <= data.get_dimension(); i++) {
-        //     sStar.absC[i-1] = 0;
-        // }
+    for (long long i = 0; i < ITS; i++) {
 
         Solution sStar = ruin_recreate(sol, data);
         update_absC(sStar);
@@ -42,7 +38,7 @@ Solution fleet_minimization(Solution& sol, Data& data) {
             }
             sStar.cost -= sStar.vehicles[tuor].cost;
             sStar.vehicles.erase(sStar.vehicles.begin() + tuor);
-            for (int i = 0; i < data.get_dimension(); i++) {
+            for (int i = 0; i < dimension; i++) {
                 if (sStar.costumer_to_vehicle[i] > tuor) {
                     sStar.costumer_to_vehicle[i]--;
                 }

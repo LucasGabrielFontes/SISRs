@@ -3,7 +3,7 @@
 
 #include "Solution.h"
 
-Solution fleet_minimization(Solution& , Data& );
+Solution fleet_minimization(Solution& , const Data& );
 int sumAbs(const Solution& );
 int sumAbsTuor(const Solution& , int );
 void update_absC(Solution& );

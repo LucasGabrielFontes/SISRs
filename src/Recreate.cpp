@@ -4,7 +4,7 @@
 
 #define BETA 0.01
 
-Solution recreate (Solution sol, Data& data) {
+Solution recreate (Solution sol, const Data& data) {
 
     random_device rd;   // Gerador de números aleatórios
     mt19937 gen(rd());  // Mersenne Twister com seed aleatória
@@ -65,7 +65,7 @@ Solution recreate (Solution sol, Data& data) {
         if (!found_place) {  // Não encontrou um ponto para inserir
             Vehicle v;
             v.capacity_used += data.get_demand(c);
-            v.cost += data.get_distance(data.get_depot(), c) + data.get_distance(c, data.get_depot());
+            v.cost += 2*data.get_distance(data.get_depot(), c);
             v.route = {data.get_depot(), c, data.get_depot()};
             sol.cost += v.cost;
             sol.vehicles.push_back(v);
@@ -85,7 +85,7 @@ Solution recreate (Solution sol, Data& data) {
     return sol;
 }
 
-double calc_cost(Solution& sol, Data& data, int vehicle_index, int pos, int customer) {
+double calc_cost(Solution& sol, const Data& data, int vehicle_index, int pos, int customer) {
     const auto& route = sol.vehicles[vehicle_index].route;
 
     if (pos < 0 || pos >= route.size() - 1) {
@@ -107,19 +107,19 @@ void sort_random(vector<int>& abs, mt19937& gen) {
     shuffle(abs.begin(), abs.end(), gen);
 }
 
-void sort_demand(vector<int>& abs, Data& data) {
+void sort_demand(vector<int>& abs, const Data& data) {
     sort(abs.begin(), abs.end(), [&data](int a, int b){
         return (data.get_demand(a) > data.get_demand(b));
     });
 }
 
-void sort_far(vector<int>& abs, Data& data) {
+void sort_far(vector<int>& abs, const Data& data) {
     sort(abs.begin(), abs.end(), [&data](int a, int b){
         return (data.get_distance(a, data.get_depot()) > data.get_distance(b, data.get_depot()));
     });
 }
 
-void sort_close(vector<int>& abs, Data& data) {
+void sort_close(vector<int>& abs, const Data& data) {
     sort(abs.begin(), abs.end(), [&data](int a, int b){
         return (data.get_distance(a, data.get_depot()) < data.get_distance(b, data.get_depot()));
     });

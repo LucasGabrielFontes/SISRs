@@ -4,6 +4,6 @@
 #include "Solution.h"
 
 Solution LocalSearch(Solution& , Data& );
-int it_v(int );
+long long calculateIterations(int );
 
 #endif

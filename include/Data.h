@@ -18,7 +18,7 @@ public:
     void print_matrix_dist();
 
     inline int get_dimension() const {return dimension;};
-    inline int get_capacity() {return capacity;};
+    inline int get_capacity() const {return capacity;};
     inline int get_depot() const {return depot;};
 
     inline string get_instance_name() {return instance_name;};

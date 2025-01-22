@@ -17,7 +17,7 @@ Solution Solution_SA(Data& data) {
     return sol;
 }
 
-Solution ruin_recreate(Solution& sol, Data& data) {
+Solution ruin_recreate(const Solution& sol, const Data& data) {
     Solution solution = ruin(sol, data);
     solution = recreate(solution, data);
     return solution;
@@ -30,11 +30,14 @@ void update_absC(Solution& sol) {
 }
 
 Solution Construction(Data& data) { // Cria uma solucao inicial com um veiculo para cada cliente
+    
+    const int dimension = data.get_dimension();
+    
     Solution sol;
-    sol.costumer_to_vehicle = vector<int>(data.get_dimension(), -1);
-    sol.absC = vector<int>(data.get_dimension(), 0);
+    sol.costumer_to_vehicle = vector<int>(dimension, -1);
+    sol.absC = vector<int>(dimension, 0);
 
-    for (int i = 2; i <= data.get_dimension(); i++) {
+    for (int i = 2; i <= dimension; i++) {
         sol.abs_costumers.push_back(i);
     }
 

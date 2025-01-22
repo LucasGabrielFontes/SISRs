@@ -24,21 +24,23 @@ lt: cardinalidade da string a ser removida no tuor t
 
 */
 
-Solution ruin(Solution sol, Data& data) {
+Solution ruin(Solution sol, const Data& data) {
 
-    double lsMax = min(static_cast<double>(L_MAX), static_cast<double>(data.get_dimension()-1)/sol.vehicles.size()); 
+    const int dimension = data.get_dimension();
+
+    double lsMax = min(static_cast<double>(L_MAX), static_cast<double>(dimension-1)/sol.vehicles.size()); 
 
     double ksMax = ((4*C_)/(1+lsMax))-1;
 
     int ks = floor(Random::getReal(1, ksMax + 1));
 
-    int csSeed = Random::getInt(2, data.get_dimension()); // O proprio cliente, nao o indice
+    int csSeed = Random::getInt(2, dimension); // O proprio cliente, nao o indice
 
     vector<bool> tourRuined(sol.vehicles.size(), false);
 
     int cont = 1;
     int strings = 0;
-    while (cont <= data.get_dimension() && strings < ks) {
+    while (cont <= dimension && strings < ks) {
 
         int ct_star = data.get_adj(csSeed, cont);
         int indTour = sol.costumer_to_vehicle[ct_star-1];
@@ -67,7 +69,7 @@ Solution ruin(Solution sol, Data& data) {
         if (sol.vehicles[i].route.size() == 2) { // Do deposito para o deposito: 1 -> 1
             // Retira o veiculo
             sol.vehicles.erase(sol.vehicles.begin() + i);
-            for (int j = 0; j < data.get_dimension(); j++) {
+            for (int j = 0; j < dimension; j++) {
                 if (sol.costumer_to_vehicle[j] > i) {
                     sol.costumer_to_vehicle[j]--;
                 }
@@ -78,7 +80,7 @@ Solution ruin(Solution sol, Data& data) {
     return sol;
 }
 
-void remove_split_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
+void remove_split_string(Solution &sol, const Data& data, int tour, int size_string, int costumer_remove) {
 
     auto& route = sol.vehicles[tour].route;
 
@@ -171,7 +173,7 @@ void remove_split_string(Solution &sol, Data& data, int tour, int size_string, i
     route.erase(route.begin() + ind - size_block1, route.begin() + ind_stay);
 }
 
-void remove_string(Solution &sol, Data& data, int tour, int size_string, int costumer_remove) {
+void remove_string(Solution &sol, const Data& data, int tour, int size_string, int costumer_remove) {
 
     auto& route = sol.vehicles[tour].route;
 
