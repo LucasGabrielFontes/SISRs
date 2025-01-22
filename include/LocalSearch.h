@@ -3,7 +3,7 @@
 
 #include "Solution.h"
 
-Solution LocalSearch(Solution& , Data& );
+Solution LocalSearch(Solution& , const Data& );
 long long calculateIterations(int );
 
 #endif

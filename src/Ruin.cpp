@@ -29,11 +29,8 @@ Solution ruin(Solution sol, const Data& data) {
     const int dimension = data.get_dimension();
 
     double lsMax = min(static_cast<double>(L_MAX), static_cast<double>(dimension-1)/sol.vehicles.size()); 
-
     double ksMax = ((4*C_)/(1+lsMax))-1;
-
     int ks = floor(Random::getReal(1, ksMax + 1));
-
     int csSeed = Random::getInt(2, dimension); // O proprio cliente, nao o indice
 
     vector<bool> tourRuined(sol.vehicles.size(), false);
@@ -47,11 +44,9 @@ Solution ruin(Solution sol, const Data& data) {
         if (sol.costumer_to_vehicle[ct_star-1] != -1 && tourRuined[indTour] == false) {
 
             double ltMax = min(static_cast<double>(sol.vehicles[indTour].route.size()), lsMax);
-
             int lt = floor(Random::getReal(1, ltMax + 1));
 
             int rd = Random::getInt(0, 1);
-
             if (rd == 0)
                 remove_string(sol, data, indTour, lt, ct_star); // costumer_to_vehicle funciona assim
             else 
@@ -64,7 +59,8 @@ Solution ruin(Solution sol, const Data& data) {
         cont++;
     }
 
-    for (int i = sol.vehicles.size()-1; i >= 0; i--) {
+    int vehicles_size = sol.vehicles.size();
+    for (int i = vehicles_size-1; i >= 0; i--) {
 
         if (sol.vehicles[i].route.size() == 2) { // Do deposito para o deposito: 1 -> 1
             // Retira o veiculo

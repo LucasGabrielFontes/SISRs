@@ -6,18 +6,17 @@
 
 Solution recreate (Solution sol, const Data& data) {
 
-    random_device rd;   // Gerador de números aleatórios
-    mt19937 gen(rd());  // Mersenne Twister com seed aleatória
+    std::mt19937_64& generator = Random::gen();
 
     // Distribuição DISCRETA com pesos: 4, 4, 2, 1, com descrito no artigo
     std::discrete_distribution<> dist({4, 4, 2, 1});
 
     // Determina o tipo de sort aleatorio a ser realizado com base nos pesos determinados previamente
-    int st = dist(gen);
+    int st = dist(generator);
 
     switch (st) {
         case 0: 
-            sort_random(sol.abs_costumers, gen);
+            sort_random(sol.abs_costumers, generator);
             break;
         case 1: 
             sort_demand(sol.abs_costumers, data);
@@ -36,18 +35,13 @@ Solution recreate (Solution sol, const Data& data) {
         pair<int, int> P = {-1, -1}; 
         double insert_costP = std::numeric_limits<double>::infinity();
         bool found_place = false;
-        // P.first : veículo em que c será inserido
-        // P.second : posição em que c será inserido na rota de P.first
 
-        // vector<int> vehicle_indx(sol.vehicles.size());
-        // for (int i = 0; i < sol.vehicles.size(); i++) {
-        //     vehicle_indx[i] = i;
-        // }
-        // shuffle(vehicle_indx.begin(), vehicle_indx.end(), gen);  // Embaralha os índices para o proximo ser ser aleatorio
-
-        for (int t = 0; t < sol.vehicles.size(); t++) {
-            if (sol.vehicles[t].capacity_used + data.get_demand(c) <= data.get_capacity()) {
-                for (int pos = 0; pos < sol.vehicles[t].route.size() - 1; pos++) {
+        int vehicles_size = sol.vehicles.size();
+        for (int t = 0; t < vehicles_size; t++) {
+            auto& vehicle = sol.vehicles[t];
+            if (vehicle.capacity_used + data.get_demand(c) <= data.get_capacity()) {
+                int route_size = vehicle.route.size();
+                for (int pos = 0; pos < route_size - 1; pos++) {
                     if (Random::getReal(0, 1) < 1 - BETA) {
                         double insert_costPos = calc_cost(sol, data, t, pos, c);
                         if (!found_place || 
@@ -103,7 +97,7 @@ double calc_cost(Solution& sol, const Data& data, int vehicle_index, int pos, in
     return insertion_cost;
 }
 
-void sort_random(vector<int>& abs, mt19937& gen) {
+void sort_random(vector<int>& abs, mt19937_64& gen) {
     shuffle(abs.begin(), abs.end(), gen);
 }
 

@@ -44,14 +44,17 @@ void details_solution(Solution &sol, Data &data) {
         cout << endl << endl;
     }
 
+    int vehicles_size = sol.vehicles.size();
     cout << "Veiculos e suas informacoes: " << endl << endl;
-    for (int i = 0; i < sol.vehicles.size(); i++) {
+    for (int i = 0; i < vehicles_size; i++) {
         cout << "Veiculo " << i+1 << ": " << endl;
         cout << "Rota: ";
-        for (int j = 0; j < sol.vehicles[i].route.size()-1; j++) {
-            cout << sol.vehicles[i].route[j] << " -> ";
+        vector<int>& route = sol.vehicles[i].route;
+        int route_size = route.size();
+        for (int j = 0; j < route_size - 1; j++) {
+            cout << route[j] << " -> ";
         }
-        cout << sol.vehicles[i].route[sol.vehicles[i].route.size()-1] << endl;
+        cout << route[route_size-1] << endl;
         double custoTrue = sol.vehicles[i].cost;
         double custo = calc_cost_vehicle(sol.vehicles[i], data);
         cout << "Custo: " << custo << endl;

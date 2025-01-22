@@ -24,7 +24,8 @@ Solution ruin_recreate(const Solution& sol, const Data& data) {
 }
 
 void update_absC(Solution& sol) {
-    for (int i = 0; i < sol.abs_costumers.size(); i++) {
+    int size = sol.abs_costumers.size();
+    for (int i = 0; i < size; i++) {
         sol.absC[sol.abs_costumers[i]-1]++;
     }
 }
@@ -49,8 +50,8 @@ Solution Construction(Data& data) { // Cria uma solucao inicial com um veiculo p
 double calc_cost_solution(const struct Solution& solution, const Data &data) {
 
     double cost = 0.0;
-
-    for (int i = 0; i < solution.vehicles.size(); i++)
+    int vehicles_size = solution.vehicles.size();
+    for (int i = 0; i < vehicles_size; i++)
         cost += calc_cost_vehicle(solution.vehicles[i], data);
 
     return cost;

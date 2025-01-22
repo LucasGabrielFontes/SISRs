@@ -9,32 +9,35 @@ Solution fleet_minimization(Solution& sol, const Data& data) {
     long long ITS = calculateIterations(dimension)/10;
     Solution sBest = sol;
 
-    for (int i = 2; i <= dimension; i++) {
+    for (int i = 2; i <= dimension; i++)
         sBest.absC[i-1] = 0;
-    }
 
     for (long long i = 0; i < ITS; i++) {
 
         Solution sStar = ruin_recreate(sol, data);
         update_absC(sStar);
 
-        if (sStar.abs_costumers.size() < sol.abs_costumers.size() || sumAbs(sStar) < sumAbs(sol)) {
-            sol = sStar;
-        }
+        int sStar_abs_c_size = sStar.abs_costumers.size();
 
-        if (sStar.abs_costumers.size() == 0) {
+        if (sStar_abs_c_size < sol.abs_costumers.size() || sumAbs(sStar) < sumAbs(sol))
+            sol = sStar;
+
+        if (sStar_abs_c_size == 0) {
             sBest = sStar;
             int tuor = -1;
             int sum = INT_MAX;
-            for (int i = 0; i < sStar.vehicles.size(); i++) {
+            int vehicles_size = sStar.vehicles.size();
+            for (int i = 0; i < vehicles_size; i++) {
                 int sum_act = sumAbsTuor(sStar, i);
                 if (sum_act < sum) {
                     sum = sum_act;
                     tuor = i;
                 }
             }
-            for (int i = 1; i < sStar.vehicles[tuor].route.size() - 1; i++) {
-                sStar.abs_costumers.push_back(sStar.vehicles[tuor].route[i]);
+            int route_size = sStar.vehicles[tuor].route.size();
+            vector<int>& route = sStar.vehicles[tuor].route;
+            for (int i = 1; i < route_size - 1; i++) {
+                sStar.abs_costumers.push_back(route[i]);
             }
             sStar.cost -= sStar.vehicles[tuor].cost;
             sStar.vehicles.erase(sStar.vehicles.begin() + tuor);
@@ -54,8 +57,11 @@ Solution fleet_minimization(Solution& sol, const Data& data) {
 int sumAbsTuor(const Solution& sol, int tour) {
 
     int cont = 0;
-    for (int i = 0; i < sol.vehicles[tour].route.size(); i++)
-        cont += sol.absC[sol.vehicles[tour].route[i]];
+    int size = sol.vehicles[tour].route.size();
+    auto& sol_absC = sol.absC;
+    auto& sol_vehi_tour = sol.vehicles[tour];
+    for (int i = 0; i < size; i++)
+        cont += sol_absC[sol_vehi_tour.route[i]];
 
     return cont;
 }
@@ -63,7 +69,8 @@ int sumAbsTuor(const Solution& sol, int tour) {
 int sumAbs(const Solution& sol) {
 
     int cont = 0;
-    for (int i = 0; i < sol.absC.size(); i++)
+    int size = sol.absC.size();
+    for (int i = 0; i < size; i++)
         cont += sol.absC[i];
 
     return cont;
