@@ -42,5 +42,5 @@ long long calculateIterations(int v) {
 
     // Interpolação
     long long iterations = it100 + static_cast<long long>((v - 100) / 900.0 * (it1000 - it100));
-    return 1000000; // iterations;
+    return iterations;
 }
