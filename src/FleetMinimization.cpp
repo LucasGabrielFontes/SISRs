@@ -51,7 +51,7 @@ Solution fleet_minimization(Solution& sol, const Data& data) {
         update_absC(sStar);
     }
 
-    return sol;
+    return sBest;
 }
 
 int sumAbsTuor(const Solution& sol, int tour) {

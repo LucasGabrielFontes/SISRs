@@ -10,6 +10,4 @@ void definesBlockSize(int , int , int& , int &, vector<int>& );
 void details_string(vector<int>& , int , int , int , int , int );
 void details_split_string(vector<int>& , int , int , int , int , int , int , int , int , int , int , int );
 
-void details_solution2(Solution & , Data & );
-
 #endif
